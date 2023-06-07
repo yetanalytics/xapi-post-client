@@ -1,2 +1,7 @@
-{:deps
- {clojure.java-time/clojure.java-time {:mvn/version "1.1.0"}}}
+{:paths ["src" "test"]
+ {:deps
+  {clojure.java-time/clojure.java-time {:mvn/version "1.1.0"}}
+  {cheshire/cheshire {:mvn/version "5.11.0"}}
+  {;; something about clojure core?
+   
+  }}}
