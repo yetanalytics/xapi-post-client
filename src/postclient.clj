@@ -28,7 +28,7 @@
    "object" {"objectType" "StatementRef"
              "id" "e3612d9wefwefwess-3900-4bef-92fd-d8db73e79e1b"}})
 
-;; stringfied json formatting of xapi statement
+; stringfied json formatting of xapi statement
 ; used for testing only
 (def json-statement
   "{\"object\":{\"id\":\"http://example.com/xapi/activity/simplestatement\",\"definition\":{\"name\":{\"en-US\":\"simple statement\"},\"description\":{\"en-US\":\"A simple Experience API statement. Note that the LRS does not need to have any prior information about the Actor (learner), the verb, or the Activity/object.\"}}},\"verb\":{\"id\":\"http://example.com/xapi/verbs#sent-a-statement\",\"display\":{\"en-US\":\"sent\"}},\"id\":\"e3612d97-3900-4bef-92fd-d8db73e79e1b\",\"actor\":{\"mbox\":\"mailto:user@example.com\",\"name\":\"Project Minoo Can API\",\"objectType\":\"Agent\"}}")
@@ -46,16 +46,18 @@
   [host port key secret statement]
   (try 
     (let [resp (post_statement_helper host port key secret statement)]
-      (println (:status resp))
-      (post_statement_helper host port key secret statement))
-   
-       ; status code handling
-       ; if status code is not normal -->
-       ; return exception (?) + message (status code + what's in :body)
+      ; handling error status codes
+      ; codes other than 200, 201, 202, 203, 204, 205, 207, 300, 301, 302, 303, 304, 307 
+      ; indicate error
+      (if ((Integer/parseInt (:status resp)) > 307)
+        (println (str "Status code: " (:status resp) (:body resp)))))
+    
+      ; catching irregular exceptions 
       (catch Exception e
         (throw (ex-info (str "Error: " (.getMessage e))
                         {:error e})))))
 
+; REPl testing
 (comment 
   (println (json/write-str sample-statement))
   (print(str "TESTING: " (post_statement "localhost" "8080" "username" "password" sample-statement)))
