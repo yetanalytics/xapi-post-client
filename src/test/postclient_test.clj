@@ -3,14 +3,13 @@
             [clojure.java.io :as io]
             [clojure.tools.logging :as log]
             [com.yetanalytics.lrs :as lrs]
-            [com.yetanalytics.lrs.impl.memory :as mem :refer [new-lrs]]
             [com.yetanalytics.lrs.pedestal.routes :refer [build]]
             [com.yetanalytics.lrs.pedestal.interceptor :as i]
             [com.yetanalytics.lrs.xapi.statements :as ss]
             [com.yetanalytics.lrs.xapi.document   :as doc]
             [io.pedestal.http :as http]
-            [com.yetanalytics.xapipe.test-support.lrs :as lrst]
-            [com.yetanalytics.lrs.protocol  :as lrsp])
+            [com.yetanalytics.lrs.protocol  :as lrsp]
+            [com.yetanalytics.lrs.impl.memory :as mem])
   (:import [java.net ServerSocket]))
 
 
@@ -34,58 +33,20 @@
   (with-open [socket (ServerSocket. 0)]
     (.getLocalPort socket)))
 
-;; A version of mem/fixture-state* that allows any path
-(defn fixture-state
-  "Get the state of an LRS from a file"
-  [path]
-  (-> (io/file path)
-      slurp
-      read-string
-      (update :state/statements
-              (partial conj (ss/statements-priority-map)))
-      (update :state/attachments
-              #(reduce-kv
-                (fn [m sha2 att]
-                  (assoc m sha2 (update att :content byte-array)))
-                {}
-                %))
-      (update :state/documents
-              (fn [docs]
-                (into {}
-                      (for [[ctx-key docs-map] docs]
-                        [ctx-key
-                         (into
-                          (doc/documents-priority-map)
-                          (for [[doc-id doc] docs-map]
-                            [doc-id (update doc :contents byte-array)]))]))))))
 
 (defn lrs
-  "Make a new LRS at port, seeding from file if seed-path is present.
-  Returns a map of:
+  "Creates a unified object to start/stop a LRS instance:
   :port - For debugging
   :lrs - The LRS itself
   :start - A function of no args that will start the LRS
   :stop - A function of no args that will stop the LRS
   :dump - A function of no args that will dump memory LRS state
-  :load - A function of two args, statements and attachments to load data
-  :request-config - A request config ala xapipe.client"
-  [& {:keys [stream-path
-             sink
-             seed-path
+  :load - A function of two args, statements and attachments to load data"
+  [& {:keys [seed-path
              port]}]
   (let [port (or port
                  (get-free-port))
-        lrs (cond
-              sink
-              (lrst/->SinkLRS)
-
-              stream-path
-              (lrst/stream-lrs stream-path)
-              :else
-              (new-lrs
-               (cond->
-                {:mode :sync}
-                 (not-empty seed-path) (assoc :init-state (fixture-state seed-path)))))
+        lrs mem/new-lrs
         service
         {:env                   :dev
          :lrs                   lrs
@@ -120,13 +81,32 @@
                                 (into [] statements)
                                 (into [] attachments)))
              :request-config {:url-base    (format "http://0.0.0.0:%d" port)
-                              :xapi-prefix "/xapi"}
-             :type (cond
-                     sink :sink
-                     stream-path :stream
-                     :else
-                     :mem)}
-      stream-path (assoc :stream-path stream-path))))
+                              :xapi-prefix "/xapi"}})))
+
+(defn source-target-fixture
+  "Populate *source-lrs* and *target-lrs* with started LRSs on two free ports.
+  LRSs are empty by default unless seed-path is provided"
+  ([f]
+   (source-target-fixture {} f))
+  ([{:keys [seed-path]} f]
+   (let [{start-source :start
+          stop-source :stop
+          :as source} (if seed-path
+                        (lrs :seed-path seed-path)
+                        (lrs))
+         {start-target :start
+          stop-target :stop
+          :as target} (lrs)]
+     (try
+       ;; Start Em Up!
+       (start-source)
+       (start-target)
+       (binding [*source-lrs* source
+                 *target-lrs* target]
+         (f))
+       (finally
+         (stop-source)
+         (stop-target))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Sample statements
