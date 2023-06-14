@@ -1,0 +1,496 @@
+; This is the Calva evaluation results output window.
+; TIPS: The keyboard shortcut `ctrl+alt+o o` shows and focuses this window
+;   when connected to a REPL session.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; Using host:port localhost:52335 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉>  ; Use `alt+enter` to evaluate
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error (FileNotFoundException) compiling at (src/test/postclient_test.clj:1:1).
+; Could not locate clojure/tools/logging__init.class, clojure/tools/logging.clj or clojure/tools/logging.cljc on classpath.
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient_test꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error (FileNotFoundException) compiling at (src/test/postclient_test.clj:1:1).
+; Could not locate clojure/tools/logging__init.class, clojure/tools/logging.clj or clojure/tools/logging.cljc on classpath.
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient_test꞉> 
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:52648 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error (FileNotFoundException) compiling at (src/test/postclient_test.clj:1:1).
+; Could not locate clojure/tools/logging__init.class, clojure/tools/logging.clj or clojure/tools/logging.cljc on classpath.
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient_test꞉> 
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:53161 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error (FileNotFoundException) compiling at (com/yetanalytics/lrs/protocol.cljc:1:1).
+; Could not locate xapi_schema/spec/resources__init.class, xapi_schema/spec/resources.clj or xapi_schema/spec/resources.cljc on classpath. Please check that namespaces with dashes use underscores in the Clojure file name.
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error (FileNotFoundException) compiling at (com/yetanalytics/lrs/protocol.cljc:1:1).
+; Could not locate xapi_schema/spec/resources__init.class, xapi_schema/spec/resources.clj or xapi_schema/spec/resources.cljc on classpath. Please check that namespaces with dashes use underscores in the Clojure file name.
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Evaluating file: postclient_test.clj
+; Syntax error (FileNotFoundException) compiling at (com/yetanalytics/lrs/protocol.cljc:1:1).
+; Could not locate xapi_schema/spec/resources__init.class, xapi_schema/spec/resources.clj or xapi_schema/spec/resources.cljc on classpath. Please check that namespaces with dashes use underscores in the Clojure file name.
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:53212 ...
+; Hooking up nREPL sessions ...
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:53226 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error (ClassNotFoundException) compiling . at (ring/middleware/multipart_params.clj:54:20).
+; javax.servlet.http.HttpServletRequest
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:53256 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error (ClassNotFoundException) compiling . at (ring/middleware/multipart_params.clj:54:20).
+; javax.servlet.http.HttpServletRequest
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:53287 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error (ClassNotFoundException) compiling . at (ring/middleware/multipart_params.clj:54:20).
+; javax.servlet.http.HttpServletRequest
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:53309 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error (ClassNotFoundException) compiling . at (ring/middleware/multipart_params.clj:54:20).
+; javax.servlet.http.HttpServletRequest
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:53373 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error macroexpanding clojure.core/ns at (src/test/postclient_test.clj:1:1).
+; io.pedestal.http - failed: #{:refer-clojure} at: [:ns-clauses :refer-clojure :clause] spec: :clojure.core.specs.alpha/ns-refer-clojure
+; io.pedestal.http - failed: #{:require} at: [:ns-clauses :require :clause] spec: :clojure.core.specs.alpha/ns-require
+; io.pedestal.http - failed: #{:import} at: [:ns-clauses :import :clause] spec: :clojure.core.specs.alpha/ns-import
+; io.pedestal.http - failed: #{:use} at: [:ns-clauses :use :clause] spec: :clojure.core.specs.alpha/ns-use
+; io.pedestal.http - failed: #{:refer} at: [:ns-clauses :refer :clause] spec: :clojure.core.specs.alpha/ns-refer
+; io.pedestal.http - failed: #{:load} at: [:ns-clauses :load :clause] spec: :clojure.core.specs.alpha/ns-load
+; io.pedestal.http - failed: #{:gen-class} at: [:ns-clauses :gen-class :clause] spec: :clojure.core.specs.alpha/ns-gen-class
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error macroexpanding clojure.core/ns at (src/test/postclient_test.clj:1:1).
+; io.pedestal.http - failed: #{:refer-clojure} at: [:ns-clauses :refer-clojure :clause] spec: :clojure.core.specs.alpha/ns-refer-clojure
+; io.pedestal.http - failed: #{:require} at: [:ns-clauses :require :clause] spec: :clojure.core.specs.alpha/ns-require
+; io.pedestal.http - failed: #{:import} at: [:ns-clauses :import :clause] spec: :clojure.core.specs.alpha/ns-import
+; io.pedestal.http - failed: #{:use} at: [:ns-clauses :use :clause] spec: :clojure.core.specs.alpha/ns-use
+; io.pedestal.http - failed: #{:refer} at: [:ns-clauses :refer :clause] spec: :clojure.core.specs.alpha/ns-refer
+; io.pedestal.http - failed: #{:load} at: [:ns-clauses :load :clause] spec: :clojure.core.specs.alpha/ns-load
+; io.pedestal.http - failed: #{:gen-class} at: [:ns-clauses :gen-class :clause] spec: :clojure.core.specs.alpha/ns-gen-class
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:53395 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+; Syntax error macroexpanding clojure.core/ns at (src/test/postclient_test.clj:1:1).
+; io.pedestal.http - failed: #{:refer-clojure} at: [:ns-clauses :refer-clojure :clause] spec: :clojure.core.specs.alpha/ns-refer-clojure
+; io.pedestal.http - failed: #{:require} at: [:ns-clauses :require :clause] spec: :clojure.core.specs.alpha/ns-require
+; io.pedestal.http - failed: #{:import} at: [:ns-clauses :import :clause] spec: :clojure.core.specs.alpha/ns-import
+; io.pedestal.http - failed: #{:use} at: [:ns-clauses :use :clause] spec: :clojure.core.specs.alpha/ns-use
+; io.pedestal.http - failed: #{:refer} at: [:ns-clauses :refer :clause] spec: :clojure.core.specs.alpha/ns-refer
+; io.pedestal.http - failed: #{:load} at: [:ns-clauses :load :clause] spec: :clojure.core.specs.alpha/ns-load
+; io.pedestal.http - failed: #{:gen-class} at: [:ns-clauses :gen-class :clause] spec: :clojure.core.specs.alpha/ns-gen-class
+; Evaluation of file postclient_test.clj failed: class clojure.lang.Compiler$CompilerException
+clj꞉postclient-test꞉> 
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /Users/minookim/Desktop/xapi-post-client ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; nREPL Connection was closed
+; Using host:port localhost:53454 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+nil
+clj꞉user꞉> 
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+; Evaluating file: postclient_test.clj
+#'postclient-test/test-post-client-st1
+clj꞉postclient-test꞉> 
+; Evaluating file: postclient_test.clj
+#'postclient-test/test-post-client-st1
+clj꞉postclient-test꞉> 
+; Evaluating file: postclient_test.clj
+#'postclient-test/test-post-client-st1
+clj꞉postclient-test꞉> 
+; Evaluating file: postclient_test.clj
+#'postclient-test/test-post-client-st1
+clj꞉postclient-test꞉> 
+; Evaluating file: postclient_test.clj
+#'postclient-test/test-post-client-st1
+clj꞉postclient-test꞉> 
+; Evaluating file: postclient_test.clj
+#'postclient-test/test-post-client-st1
+clj꞉postclient-test꞉> 
+#'postclient-test/test-post-client-st1
+clj꞉postclient-test꞉> 
+#'postclient-test/test-post-client-st1
+clj꞉postclient-test꞉> 
+
+ERROR in (test-post-client-st1) (postclient.clj:58)
+Uncaught exception, not in assertion.
+expected: nil
+  actual: clojure.lang.ExceptionInfo: Error: Connection refused (Connection refused)
+{:type :postclient/functional-error}
+ at postclient$post_statement.invokeStatic (postclient.clj:58)
+    postclient$post_statement.invoke (postclient.clj:46)
+    postclient_test$fn__33941.invokeStatic (NO_SOURCE_FILE:168)
+    postclient_test/fn (NO_SOURCE_FILE:164)
+    clojure.test$test_var$fn__9761.invoke (test.clj:717)
+    clojure.test$test_var.invokeStatic (test.clj:717)
+    clojure.test$test_var.invoke (test.clj:708)
+    postclient_test$test_post_client_st1.invokeStatic (NO_SOURCE_FILE:164)
+    postclient_test$test_post_client_st1.invoke (NO_SOURCE_FILE:164)
+    postclient_test$eval33946.invokeStatic (NO_SOURCE_FILE:173)
+    postclient_test$eval33946.invoke (NO_SOURCE_FILE:173)
+    clojure.lang.Compiler.eval (Compiler.java:7181)
+    clojure.lang.Compiler.eval (Compiler.java:7136)
+    clojure.core$eval.invokeStatic (core.clj:3202)
+    clojure.core$eval.invoke (core.clj:3198)
+    nrepl.middleware.interruptible_eval$evaluate$fn__1265$fn__1266.invoke (interruptible_eval.clj:87)
+    clojure.lang.AFn.applyToHelper (AFn.java:152)
+    clojure.lang.AFn.applyTo (AFn.java:144)
+    clojure.core$apply.invokeStatic (core.clj:667)
+    clojure.core$with_bindings_STAR_.invokeStatic (core.clj:1977)
+    clojure.core$with_bindings_STAR_.doInvoke (core.clj:1977)
+    clojure.lang.RestFn.invoke (RestFn.java:425)
+    nrepl.middleware.interruptible_eval$evaluate$fn__1265.invoke (interruptible_eval.clj:87)
+    clojure.main$repl$read_eval_print__9110$fn__9113.invoke (main.clj:437)
+    clojure.main$repl$read_eval_print__9110.invoke (main.clj:437)
+    clojure.main$repl$fn__9119.invoke (main.clj:458)
+    clojure.main$repl.invokeStatic (main.clj:458)
+    clojure.main$repl.doInvoke (main.clj:368)
+    clojure.lang.RestFn.invoke (RestFn.java:1523)
+    nrepl.middleware.interruptible_eval$evaluate.invokeStatic (interruptible_eval.clj:84)
+    nrepl.middleware.interruptible_eval$evaluate.invoke (interruptible_eval.clj:56)
+    nrepl.middleware.interruptible_eval$interruptible_eval$fn__1298$fn__1302.invoke (interruptible_eval.clj:152)
+    clojure.lang.AFn.run (AFn.java:22)
+    nrepl.middleware.session$session_exec$main_loop__1368$fn__1372.invoke (session.clj:218)
+    nrepl.middleware.session$session_exec$main_loop__1368.invoke (session.clj:217)
+    clojure.lang.AFn.run (AFn.java:22)
+    java.lang.Thread.run (Thread.java:829)
+Caused by: java.net.ConnectException: Connection refused (Connection refused)
+ at java.net.PlainSocketImpl.socketConnect (PlainSocketImpl.java:-2)
+    java.net.AbstractPlainSocketImpl.doConnect (AbstractPlainSocketImpl.java:412)
+    java.net.AbstractPlainSocketImpl.connectToAddress (AbstractPlainSocketImpl.java:255)
+    java.net.AbstractPlainSocketImpl.connect (AbstractPlainSocketImpl.java:237)
+    java.net.SocksSocketImpl.connect (SocksSocketImpl.java:392)
+    java.net.Socket.connect (Socket.java:609)
+    org.apache.http.conn.socket.PlainConnectionSocketFactory.connectSocket (PlainConnectionSocketFactory.java:75)
+    org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect (DefaultHttpClientConnectionOperator.java:142)
+    org.apache.http.impl.conn.BasicHttpClientConnectionManager.connect (BasicHttpClientConnectionManager.java:313)
+    org.apache.http.impl.execchain.MainClientExec.establishRoute (MainClientExec.java:393)
+    org.apache.http.impl.execchain.MainClientExec.execute (MainClientExec.java:236)
+    org.apache.http.impl.execchain.ProtocolExec.execute (ProtocolExec.java:186)
+    org.apache.http.impl.execchain.RetryExec.execute (RetryExec.java:89)
+    org.apache.http.impl.execchain.RedirectExec.execute (RedirectExec.java:110)
+    org.apache.http.impl.client.InternalHttpClient.doExecute (InternalHttpClient.java:185)
+    org.apache.http.impl.client.CloseableHttpClient.execute (CloseableHttpClient.java:83)
+    clj_http.core$request.invokeStatic (core.clj:621)
+    clj_http.core$request.invoke (core.clj:546)
+    clj_http.core$request.invokeStatic (core.clj:547)
+    clj_http.core$request.invoke (core.clj:546)
+    clojure.lang.Var.invoke (Var.java:384)
+    clj_http.client$wrap_request_timing$fn__33749.invoke (client.clj:1083)
+    clj_http.headers$wrap_header_map$fn__32610.invoke (headers.clj:152)
+    clj_http.client$wrap_query_params$fn__33629.invoke (client.clj:817)
+    clj_http.client$wrap_basic_auth$fn__33635.invoke (client.clj:840)
+    clj_http.client$wrap_oauth$fn__33640.invoke (client.clj:857)
+    clj_http.client$wrap_user_info$fn__33649.invoke (client.clj:877)
+    clj_http.client$wrap_url$fn__33731.invoke (client.clj:1035)
+    clj_http.client$wrap_decompression$fn__33376.invoke (client.clj:416)
+    clj_http.client$wrap_input_coercion$fn__33541.invoke (client.clj:630)
+    clj_http.client$wrap_additional_header_parsing$fn__33566.invoke (client.clj:685)
+    clj_http.client$wrap_output_coercion$fn__33528.invoke (client.clj:574)
+    clj_http.client$wrap_exceptions$fn__33323.invoke (client.clj:250)
+    clj_http.client$wrap_accept$fn__33581.invoke (client.clj:728)
+    clj_http.client$wrap_accept_encoding$fn__33588.invoke (client.clj:750)
+    clj_http.client$wrap_content_type$fn__33575.invoke (client.clj:711)
+    clj_http.client$wrap_form_params$fn__33696.invoke (client.clj:959)
+    clj_http.client$wrap_nested_params$fn__33717.invoke (client.clj:993)
+    clj_http.client$wrap_flatten_nested_params$fn__33726.invoke (client.clj:1017)
+    clj_http.client$wrap_method$fn__33654.invoke (client.clj:893)
+    clj_http.cookies$wrap_cookies$fn__31483.invoke (cookies.clj:128)
+    clj_http.links$wrap_links$fn__33004.invoke (links.clj:63)
+    clj_http.client$wrap_unknown_host$fn__33734.invoke (client.clj:1046)
+    clj_http.client$request_STAR_.invokeStatic (client.clj:1174)
+    clj_http.client$request_STAR_.invoke (client.clj:1167)
+    clj_http.client$post.invokeStatic (client.clj:1192)
+    clj_http.client$post.doInvoke (client.clj:1188)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    postclient$post_statement_helper.invokeStatic (postclient.clj:39)
+    postclient$post_statement_helper.invoke (postclient.clj:37)
+    postclient$post_statement.invokeStatic (postclient.clj:49)
+    postclient$post_statement.invoke (postclient.clj:46)
+    postclient_test$fn__33941.invokeStatic (NO_SOURCE_FILE:168)
+    postclient_test/fn (NO_SOURCE_FILE:164)
+    clojure.test$test_var$fn__9761.invoke (test.clj:717)
+    clojure.test$test_var.invokeStatic (test.clj:717)
+    clojure.test$test_var.invoke (test.clj:708)
+    postclient_test$test_post_client_st1.invokeStatic (NO_SOURCE_FILE:164)
+    postclient_test$test_post_client_st1.invoke (NO_SOURCE_FILE:164)
+    postclient_test$eval33946.invokeStatic (NO_SOURCE_FILE:173)
+    postclient_test$eval33946.invoke (NO_SOURCE_FILE:173)
+    clojure.lang.Compiler.eval (Compiler.java:7181)
+    clojure.lang.Compiler.eval (Compiler.java:7136)
+    clojure.core$eval.invokeStatic (core.clj:3202)
+    clojure.core$eval.invoke (core.clj:3198)
+    nrepl.middleware.interruptible_eval$evaluate$fn__1265$fn__1266.invoke (interruptible_eval.clj:87)
+    clojure.lang.AFn.applyToHelper (AFn.java:152)
+    clojure.lang.AFn.applyTo (AFn.java:144)
+    clojure.core$apply.invokeStatic (core.clj:667)
+    clojure.core$with_bindings_STAR_.invokeStatic (core.clj:1977)
+    clojure.core$with_bindings_STAR_.doInvoke (core.clj:1977)
+    clojure.lang.RestFn.invoke (RestFn.java:425)
+    nrepl.middleware.interruptible_eval$evaluate$fn__1265.invoke (interruptible_eval.clj:87)
+    clojure.main$repl$read_eval_print__9110$fn__9113.invoke (main.clj:437)
+    clojure.main$repl$read_eval_print__9110.invoke (main.clj:437)
+    clojure.main$repl$fn__9119.invoke (main.clj:458)
+    clojure.main$repl.invokeStatic (main.clj:458)
+    clojure.main$repl.doInvoke (main.clj:368)
+    clojure.lang.RestFn.invoke (RestFn.java:1523)
+    nrepl.middleware.interruptible_eval$evaluate.invokeStatic (interruptible_eval.clj:84)
+    nrepl.middleware.interruptible_eval$evaluate.invoke (interruptible_eval.clj:56)
+    nrepl.middleware.interruptible_eval$interruptible_eval$fn__1298$fn__1302.invoke (interruptible_eval.clj:152)
+    clojure.lang.AFn.run (AFn.java:22)
+    nrepl.middleware.session$session_exec$main_loop__1368$fn__1372.invoke (session.clj:218)
+    nrepl.middleware.session$session_exec$main_loop__1368.invoke (session.clj:217)
+    clojure.lang.AFn.run (AFn.java:22)
+    java.lang.Thread.run (Thread.java:829)
+nil
+clj꞉postclient-test꞉> 

@@ -1,12 +1,13 @@
 (ns postclient-test
-  (:require [clojure.test   :refer [deftest testing is use-fixtures]]
+  (:require [clojure.test   :refer [deftest is testing use-fixtures]]
             [clojure.tools.logging :as log]
             [com.yetanalytics.lrs :as lrs]
-            [com.yetanalytics.lrs.pedestal.routes :refer [build]]
+            [com.yetanalytics.lrs.impl.memory :as mem]
             [com.yetanalytics.lrs.pedestal.interceptor :as i]
+            [com.yetanalytics.lrs.pedestal.routes :refer [build]]
             [com.yetanalytics.lrs.protocol  :as lrsp]
             [io.pedestal.http :as http]
-       ;     [com.yetanalytics.lrs.impl.memory :as mem])
+            [postclient :as pc])
   (:import [java.net ServerSocket]))
 
 
@@ -164,7 +165,7 @@
   (let [id-0  (get stmt-0 "id")
         portNum (get-free-port)]
     ;; insert to lrs
-   ; (post-statement "localhost" portNum "username" "password" stmt-0) 
+    (pc/post-statement "localhost" portNum "username" "password" stmt-0) 
     (testing "testing if statements match"
       (is (= {:statement stmt-0}
              (get-ss lrs auth-ident {:statementId id-0 :format "ids"} #{}))))))
