@@ -28,6 +28,27 @@
 ;; Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn- remove-props
+  "Remove properties added by `prepare-statement`."
+  [statement]
+  (-> statement
+      (dissoc "timestamp")
+      (dissoc "stored")
+      (dissoc "authority")
+      (dissoc "version")))
+
+(defn get-ss
+  "Same as `lrsp/-get-statements` except that `remove-props` is applied
+   on the results."
+  [lrs auth-ident params ltags]
+  (if (or (contains? params :statementId)
+          (contains? params :voidedStatementId))
+    (-> (lrsp/-get-statements lrs auth-ident params ltags)
+        (update :statement remove-props))
+    (-> (lrsp/-get-statements lrs auth-ident params ltags)
+        (update-in [:statement-result :statements]
+                   (partial map remove-props)))))
+
 ;; https://gist.github.com/apeckham/78da0a59076a4b91b1f5acf40a96de69
 (defn- get-free-port []
   (with-open [socket (ServerSocket. 0)]
@@ -42,8 +63,7 @@
   :stop - A function of no args that will stop the LRS
   :dump - A function of no args that will dump memory LRS state
   :load - A function of two args, statements and attachments to load data"
-  [& {:keys [seed-path
-             port]}]
+  [& {:keys [port]}]
   (let [port (or port
                  (get-free-port))
         lrs mem/new-lrs
@@ -83,45 +103,31 @@
              :request-config {:url-base    (format "http://0.0.0.0:%d" port)
                               :xapi-prefix "/xapi"}})))
 
-(defn source-target-fixture
-  "Populate *source-lrs* and *target-lrs* with started LRSs on two free ports.
+;; fixture for uniformed testing
+(def ^:dynamic *test-lrs* nil)
+(defn test-fixture
+  "Populate *test-lrs* with started a LRS on a free port
   LRSs are empty by default unless seed-path is provided"
-  ([f]
-   (source-target-fixture {} f))
-  ([{:keys [seed-path]} f]
-   (let [{start-source :start
-          stop-source :stop
-          :as source} (if seed-path
-                        (lrs :seed-path seed-path)
-                        (lrs))
-         {start-target :start
-          stop-target :stop
-          :as target} (lrs)]
-     (try
-       ;; Start Em Up!
-       (start-source)
-       (start-target)
-       (binding [*source-lrs* source
-                 *target-lrs* target]
-         (f))
-       (finally
-         (stop-source)
-         (stop-target))))))
+  [f] 
+  (let [{start-test :start 
+         stop-test :stop 
+         :as test} (lrs)]
+    (try
+      ;; start LRS --> shutdown if exceptions are thrown 
+      (start-test) 
+      (binding [*test-lrs* test] 
+        (f)) 
+      (finally 
+        (stop-test)))))
+
+(use-fixtures :once test-fixture)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Sample statements
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def stmt-0
-  {"id"     "00000000-0000-4000-8000-000000000000"
-   "actor"  {"mbox"       "mailto:sample.foo@example.com"
-             "objectType" "Agent"}
-   "verb"   {"id"      "http://adlnet.gov/expapi/verbs/answered"
-             "display" {"en-US" "answered"
-                        "zh-CN" "回答了"}}
-   "object" {"id" "http://www.example.com/tincan/activities/multipart"}})
 
-(def stmt-4
+(def stmt-0
   {"id"     "00000000-0000-4000-8000-000000000000"
    "actor" {"objectType" "Agent"
             "name" "Eva Loftus"
@@ -150,8 +156,6 @@
            "display" {"en-US" "voided"}}
    "object" {"objectType" "StatementRef"
              "id" "6a368259-c58a-4f1c-be2b-df442fbb7601"}})
-(get [1 2 3] 1)
-(get stmt-0 "id")
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -159,40 +163,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(deftest test-statement-fns
+(deftest test-post-client-st1
   (let [id-0  (get stmt-0 "id")
-        id-1  (get stmt-1 "id")
-        id-2  (get stmt-2 "id")
-        agt-0 (-> stmt-0 (get "actor"))
-        agt-1 (-> stmt-1 (get "actor"))
-        vrb-1 (get-in stmt-1 ["verb" "id"])
-        act-1 (get-in stmt-1 ["object" "id"])]
-    (println "does the code reach here?")
+        portNum (get-free-port)]
+    ;; insert to lrs
+    (post-statement "localhost" portNum "username" "password" stmt-0) 
+    (testing "testing if statements match"
+      (is (= {:statement stmt-0}
+             (get-ss lrs auth-ident {:statementId id-0 :format "ids"} #{}))))))
+
+;; repeat for statements 2-4
 
 
-    (comment
-      (testing "statement ID queries"
-        (is (= {:statement stmt-0}
-               (lrsp/-get-statements lrs auth-ident {:voidedStatementId id-0} #{})))
-        (is (= {:statement (update-in stmt-0 ["verb" "display"] dissoc "zh-CN")}
-               (lrsp/-get-statements lrs
-                                     auth-ident
-                                     {:voidedStatementId id-0 :format "canonical"}
-                                     #{"en-US"})))
-        (is (= {:statement
-                {"id"     id-1
-                 "actor"  {"objectType" "Agent"
-                           "mbox"       "mailto:sample.agent@example.com"}
-                 "verb"   {"id" "http://adlnet.gov/expapi/verbs/answered"}
-                 "object" {"id" "http://www.example.com/tincan/activities/multipart"}}}
-               (lrsp/-get-statements lrs auth-ident {:statementId id-1 :format "ids"} #{})))
-        (is (= {:statement stmt-2}
-               (lrsp/-get-statements lrs auth-ident {:statementId id-2} #{})))))
-
-
-
-    (component/stop lrs)
-    (support/unstrument-lrsql)))
+  
 
 
 
