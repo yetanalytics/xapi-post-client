@@ -212,6 +212,32 @@
 (deftest test-post-client-invalid-args
   (testing "testing for invalid hostname" 
     (try
-      pc/post-statement "invalidhost" 8080 "username" "password" stmt-0 
+      (pc/post-statement "invalidhost" 8080 "username" "password" stmt-0)
       (catch Exception e 
-        (is (= Throwable->map e "yes"))))))
+        (is (= "An invalid hostname was inputted"
+                  (:message (:data (first (:via (Throwable->map e))))))))))
+  (testing "testing for invalid port number"
+    (try
+     (pc/post-statement "localhost" 10000000 "username" "password" stmt-0)
+      (catch Exception e 
+        (is (= "port out of range:10000000" 
+               (:message (second (:via (Throwable->map e)))))))))
+   (testing "testing for invalid username"
+     (try
+       (pc/post-statement "localhost" 8080 "invalidusername" "password" stmt-0)
+       (catch Exception e
+         (is (= "An invalid username or password was inputted"
+                  (:message (:data (first (:via (Throwable->map e))))))))))
+   (testing "testing for invalid password"
+     (try
+       (pc/post-statement "localhost" 8080 "username" "invalidpassword" stmt-0)
+       (catch Exception e
+         (is (= "An invalid username or password was inputted"
+                  (:message (:data (first (:via (Throwable->map e)))))))))))
+
+; TODO:
+;; invalid xapi statement inputs
+;; completely wrong format
+;; duplicate statements
+;; bad lrs??
+;; merge
