@@ -1,9 +1,7 @@
 (ns postclient
-  (:require [clj-http.client :as client]
-            [clojure.string :as str]
-            [cheshire.core :refer :all]
-            [clojure.data.json :as json]
-            [clojure.spec.alpha :as s]))
+  (:require [cheshire.core :refer :all]
+            [clj-http.client :as client]) 
+  (:import [java.net ConnectException UnknownHostException]))
 
 (def headers
   {"Content-Type" "application/json"
@@ -43,9 +41,10 @@
                 :throw-exceptions false
                 :throw-entire-message? true}))
 
+
 (defn post-statement
   [host port key secret statement]
-  (try 
+  (try
     (let [resp (post-statement-helper host port key secret statement)]
       ; handling error status codes
       ; codes other than 200, 201, 202, 203, 204, 205, 207, 300, 301, 302, 303, 304, 307 
@@ -54,11 +53,22 @@
         (throw (ex-info (str "Status code: " (:status resp) " Reason: " (:body resp))
                         {:type ::post-error}))))
       ; catching irregular exceptions 
-      (catch Exception e
-        (throw (ex-info (str "Error: " (.getMessage e))
-                        {:type ::functional-error}
-                        e)))))
-
+    (catch ConnectException e 
+      (throw (ex-info (str "Error: " (.getMessage e))
+                      {:type ::invalid-login-error
+                       :message "An invalid username or password was inputted"}
+                      e)))
+    
+    (catch UnknownHostException e
+      (throw (ex-info (str "Error: " (.getMessage e))
+                      {:type ::invalid-host-error
+                       :message "An invalid hostname was inputted"}
+                      e)))
+    (catch Exception e
+      (throw (ex-info (str "Error: " (.getMessage e))
+                      {:type ::functional-error}
+                      e)))))
+ 
 ; REPl testing
 (comment 
   ; wrong host --> built in error is good enough

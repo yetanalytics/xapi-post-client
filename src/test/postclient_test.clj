@@ -197,11 +197,11 @@
     ;; insert to lrs
     (pc/post-statement "localhost" port "username" "password" stmt-2)
     (testing "testing if statements match"
-      (is (= {:statement stmt-0}
+      (is (= {:statement stmt-2}
              (get-ss lrs auth-ident {:statementId id-2} #{}))))))
 
 (deftest test-post-client-st3
-  (let [id-3  (get stmt-0 "id")
+  (let [id-3  (get stmt-3 "id")
         {:keys [port lrs]} *test-lrs*]
     ;; insert to lrs
     (pc/post-statement "localhost" port "username" "password" stmt-3)
@@ -209,9 +209,9 @@
       (is (= {:statement stmt-3}
              (get-ss lrs auth-ident {:statementId id-3} #{}))))))
 
-  
-
-
-
-
-
+(deftest test-post-client-invalid-args
+  (testing "testing for invalid hostname" 
+    (try
+      pc/post-statement "invalidhost" 8080 "username" "password" stmt-0 
+      (catch Exception e 
+        (is (= Throwable->map e "yes"))))))
