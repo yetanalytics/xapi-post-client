@@ -118,7 +118,7 @@
       (finally 
         (stop-test)))))
 
-(use-fixtures :once test-fixture)
+(use-fixtures :each test-fixture)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Sample statements
@@ -140,8 +140,8 @@
    "actor" {"objectType" "Agent"
             "name" "V Han"
             "mbox" "mailto:v@example.adlnet.gov"}
-   "verb" {"id" "http://adlnet.gov/expapi/verbs/voided"
-           "display" {"en-US" "voided"}}
+   "verb" {"id" "http://adlnet.gov/expapi/verbs/faded"
+           "display" {"en-US" "faded"}}
    "object" {"objectType" "StatementRef"
              "id" "6a368259-c58a-4f1c-be2b-df442fbb7601"}})
 
@@ -150,30 +150,64 @@
    "actor" {"objectType" "Agent"
             "name" "Pablo Brunet"
             "mbox" "mailto:pablo@example.adlnet.gov"}
-   "verb" {"id" "http://adlnet.gov/expapi/verbs/voided"
-           "display" {"en-US" "voided"}}
+   "verb" {"id" "http://adlnet.gov/expapi/verbs/move"
+           "display" {"en-US" "move"}}
    "object" {"objectType" "StatementRef"
              "id" "6a368259-c58a-4f1c-be2b-df442fbb7601"}})
+
+(def stmt-3
+  {"id"     "00000000-0000-4000-8000-000000000003"
+   "actor" {"objectType" "Agent"
+            "name" "Daniel Soong"
+            "mbox" "mailto:daniel@example.adlnet.gov"}
+   "verb" {"id" "http://adlnet.gov/expapi/verbs/fight"
+           "display" {"en-US" "fight"}}
+   "object" {"objectType" "StatementRef"
+             "id" "6a368259-c58a-4f1c-be2b-df442fbb7601"}})
+
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Unit tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(get-ss lrs auth-ident {:statementId (get stmt-0 "id") :format "ids"} #{})
-
-(deftest test-post-client-st1
+(deftest test-post-client-st0
   (let [id-0  (get stmt-0 "id")
-        portNum (get-free-port)]
+        {:keys [port lrs]} *test-lrs*]
     ;; insert to lrs
-    (pc/post-statement "localhost" portNum "username" "password" stmt-0) 
+    (pc/post-statement "localhost" port "username" "password" stmt-0)
     (testing "testing if statements match"
       (is (= {:statement stmt-0}
-             (get-ss lrs auth-ident {:statementId id-0 :format "ids"} #{}))))))
+             (get-ss lrs auth-ident {:statementId id-0} #{}))))))
 
-(test-post-client-st1)
-;; repeat for statements 2-4
+(deftest test-post-client-st1
+  (let [id-1  (get stmt-1 "id")
+        {:keys [port lrs]} *test-lrs*]
+    ;; insert to lrs
+    (pc/post-statement "localhost" port "username" "password" stmt-1)
+    (testing "testing if statements match"
+      (is (= {:statement stmt-1}
+             (get-ss lrs auth-ident {:statementId id-1} #{}))))))
 
+(deftest test-post-client-st2
+  (let [id-2  (get stmt-2 "id")
+        {:keys [port lrs]} *test-lrs*]
+    ;; insert to lrs
+    (pc/post-statement "localhost" port "username" "password" stmt-2)
+    (testing "testing if statements match"
+      (is (= {:statement stmt-0}
+             (get-ss lrs auth-ident {:statementId id-2} #{}))))))
+
+(deftest test-post-client-st3
+  (let [id-3  (get stmt-0 "id")
+        {:keys [port lrs]} *test-lrs*]
+    ;; insert to lrs
+    (pc/post-statement "localhost" port "username" "password" stmt-3)
+    (testing "testing if statements match"
+      (is (= {:statement stmt-3}
+             (get-ss lrs auth-ident {:statementId id-3} #{}))))))
 
   
 
