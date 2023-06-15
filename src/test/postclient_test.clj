@@ -64,7 +64,7 @@
   [& {:keys [port]}]
   (let [port (or port
                  (get-free-port))
-        lrs mem/new-lrs
+        lrs (mem/new-lrs {:mode :sync})
         service
         {:env                   :dev
          :lrs                   lrs
@@ -160,6 +160,7 @@
 ;; Unit tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(get-ss lrs auth-ident {:statementId (get stmt-0 "id") :format "ids"} #{})
 
 (deftest test-post-client-st1
   (let [id-0  (get stmt-0 "id")
@@ -170,6 +171,7 @@
       (is (= {:statement stmt-0}
              (get-ss lrs auth-ident {:statementId id-0 :format "ids"} #{}))))))
 
+(test-post-client-st1)
 ;; repeat for statements 2-4
 
 
