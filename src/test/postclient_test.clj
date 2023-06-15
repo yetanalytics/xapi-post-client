@@ -158,12 +158,22 @@
 (def stmt-3
   {"id"     "00000000-0000-4000-8000-000000000003"
    "actor" {"objectType" "Agent"
-            "name" "Daniel Soong"
+            "name" "Daniel Song"
             "mbox" "mailto:daniel@example.adlnet.gov"}
    "verb" {"id" "http://adlnet.gov/expapi/verbs/fight"
            "display" {"en-US" "fight"}}
    "object" {"objectType" "StatementRef"
              "id" "6a368259-c58a-4f1c-be2b-df442fbb7601"}})
+
+(def stmt-inval
+  {"id"     "00000000-0000-4000-8000-000000000004"
+   "actor" {"objectType" "Agent"
+            "name" "Sarah Bao"
+            "mbox" "mailto:sarah@example.adlnet.gov"}
+   "verb" {"id" "http://adlnet.gov/expapi/verbs/fight"
+           "display" {"en-US" "fight"}}
+   "object" {"objectType" "StatementRef"
+             "id" "invalid-uuid"}})
 
 
 
@@ -234,6 +244,10 @@
        (catch Exception e
          (is (= "An invalid username or password was inputted"
                   (:message (:data (first (:via (Throwable->map e)))))))))))
+
+(deftest test-post-client-invalid-statement
+  (try
+    (pc/post-statement "localhost" 8080 "username" "password" stmt-invl)))
 
 ; TODO:
 ;; invalid xapi statement inputs
