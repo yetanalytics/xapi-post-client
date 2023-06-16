@@ -15,7 +15,18 @@
    "verb" {"id" "http://adlnet.gov/expapi/verbs/voided"
            "display" {"en-US" "voided"}}
    "object" {"objectType" "StatementRef"
-             "id" "e3612d97-3900-4bef-92fd-d8db73e79e1b"}})
+             "id" "31ce785c-750d-4432-9356-4b08fd35c538"}})
+
+(def sample-statement2
+  {"actor" {"objectType" "Agent"
+            "name" "Minva Kim"
+            "mbox" "mailto:admin@example.adlnet.gov"}
+   "verb" {"id" "http://adlnet.gov/expapi/verbs/voided"
+           "display" {"en-US" "voided"}}
+   "object" {"objectType" "StatementRef"
+             "id" "31ce785c-750d-4432-9356-4b08fd35c538"}})
+
+
 
 ;; sample-statement with wrong object id
 (def error-sample-statement
@@ -49,26 +60,20 @@
       ; handling error status codes
       ; codes other than 200, 201, 202, 203, 204, 205, 207, 300, 301, 302, 303, 304, 307 
       ; indicate error
-      (if (> (:status resp) 307)
-        (throw (ex-info (str "Status code: " (:status resp) " Reason: " (:body resp))
-                        {:type ::post-error}))))
-      ; catching irregular exceptions 
-    (catch ConnectException e 
-      (throw (ex-info (str "Error: " (.getMessage e))
-                      {:type ::invalid-login-error
-                       :message "An invalid username or password was inputted"}
-                      e)))
-    
+      (cond 
+        (= (:status resp) 409) (throw (ex-info (str "Status code: " (:status resp) " Reason: Cannot insert a duplicate statement")
+                        {:type ::post-error}))
+        (> (:status resp) 307)  (throw (ex-info (str "Status code: " (:status resp) " Reason: " (:body resp))
+                        {:type ::post-error}))
+        :else {}))
+    ;; catching irregular exceptions   
+    ;; invalid port and auth exception messages are sent out by clj.http
     (catch UnknownHostException e
       (throw (ex-info (str "Error: " (.getMessage e))
                       {:type ::invalid-host-error
                        :message "An invalid hostname was inputted"}
-                      e)))
-    (catch Exception e
-      (throw (ex-info (str "Error: " (.getMessage e))
-                      {:type ::functional-error}
                       e)))))
- 
+
 ; REPl testing
 (comment 
   ; wrong host --> built in error is good enough
@@ -79,7 +84,10 @@
   (post-statement "localhost" "8080" "wrong_username" "password" sample-statement)
   (post-statement "localhost" "8080" "username" "wrong_password" sample-statement)
   ; badly formatted sample-statement --> status 400
-  (post-statement "localhost" "8080" "username" "password" error-sample-statement)
+  (post-statement "8080" "localhost" "username" "password" error-sample-statement)
+  ;; duplicate
+  (post-statement "localhost" "8080" "username" "password" sample-statement2) 
+  (post-statement "localhost" "8080" "username" "password" sample-statement2)
 )
 
 

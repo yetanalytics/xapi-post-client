@@ -53,7 +53,7 @@
     (.getLocalPort socket)))
 
 
-(defn lrs
+(defn create_lrs
   "Creates a unified object to start/stop a LRS instance:
   :port - For debugging
   :lrs - The LRS itself
@@ -109,7 +109,7 @@
   [f] 
   (let [{start-test :start 
          stop-test :stop 
-         :as test} (lrs)]
+         :as test} (create_lrs)]
     (try
       ;; start LRS --> shutdown if exceptions are thrown 
       (start-test) 
@@ -128,7 +128,17 @@
 (def stmt-0
   {"id"     "00000000-0000-4000-8000-000000000000"
    "actor" {"objectType" "Agent"
-            "name" "Eva Loftus"
+            "name" "Eva Kim"
+            "mbox" "mailto:eva@example.adlnet.gov"}
+   "verb" {"id" "http://adlnet.gov/expapi/verbs/voided"
+           "display" {"en-US" "voided"}}
+   "object" {"objectType" "StatementRef"
+             "id" "e3612d97-3900-4bef-92fd-d8db73e79e1b"}})
+
+(def stmt-0-changed
+  {"id"     "00000000-0000-4000-8000-000000000000"
+   "actor" {"objectType" "Agent"
+            "name" "Minva Kim"
             "mbox" "mailto:eva@example.adlnet.gov"}
    "verb" {"id" "http://adlnet.gov/expapi/verbs/voided"
            "display" {"en-US" "voided"}}
@@ -177,7 +187,14 @@
 
 (def stmt-wrong-format
   {"wrong category" "id?"
-   "wrong category#2" "first name" "last name"})
+   "wrong category#2" "first name" 
+   "wrong category #3" "last name"})
+
+(def stmt-incomplete
+  {"id"     "00000000-0000-4000-8000-000000000005"
+   "actor" {"objectType" "Agent"
+            "name" "Darshan Fester"
+            "mbox" "mailto:darshan@example.adlnet.gov"}})
 
 
 
@@ -235,45 +252,47 @@
      (pc/post-statement "localhost" 10000000 "username" "password" stmt-0)
       (catch Exception e 
         (is (= "port out of range:10000000" 
-               (:message (second (:via (Throwable->map e)))))))))
-   )
+               (:message (first (:via (Throwable->map e))))))))))
   
     
-(deftest test-post-client-invalid-statement 
+(deftest test-post-client-invalid-statements 
   (testing "testing for statement with invalid object UUID"
    (try 
      (let [{:keys [port]} *test-lrs*] 
        (pc/post-statement "localhost" port "username" "password" stmt-inval)) 
      (catch Exception e 
        (is (= :postclient/post-error 
-              (:type (:data (second (:via (Throwable->map e))))))))))
+              (:type (:data (first (:via (Throwable->map e))))))))))
   (testing "testing for statement with completely wrong format"
     (try
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "username" "password" stmt-wrong-format))
       (catch Exception e
+        (is (= :postclient/post-error
+               (:type (:data (first (:via (Throwable->map e))))))))))
+  (testing "testing for statement with no verb and object" 
+    (try 
+      (let [{:keys [port]} *test-lrs*] 
+        (pc/post-statement "localhost" port "username" "password" stmt-incomplete)) 
+      (catch Exception e 
         (is (= :postclient/post-error 
-              (:type (:data (second (:via (Throwable->map e)))))))))))
-  ;(testing "testing for POSTing a duplicate statement"))
+               (:type (:data (first (:via (Throwable->map e)))))))))))
+  
+(deftest test-post-client-duplicate-statements
+  (testing "testing for POSTing a duplicate statement"
+    (try
+      (let [{:keys [port]} *test-lrs*]
+        (pc/post-statement "localhost" port "username" "password" stmt-0)
+        (pc/post-statement "localhost" port "username" "password" stmt-0-changed))
+      (catch Exception e
+        (is (= :postclient/post-error
+               (:type (:data (first (:via (Throwable->map e)))))))))))
+
+  
+  
+  
 
 
 
-;; archived for now
-  (comment
-    (testing "testing for invalid username"
-      (try
-        (let [id-0 (get stmt-0 "id")
-              {:keys [port]} *test-lrs*]
-          (pc/post-statement "localhost" port "invalidusername" "password" stmt-0))
-        (catch Exception e
-          (is (= "An invalid username or password was inputted"
-                 (:message (:data (first (:via (Throwable->map e))))))))))
-    (testing "testing for invalid password"
-      (try
-        (pc/post-statement "localhost" 8080 "username" "invalidpassword" stmt-0)
-        (catch Exception e
-          (is (= "An invalid username or password was inputted"
-                 (:message (:data (first (:via (Throwable->map e)))))))))))
 
-; TODO:
-;; duplicate statements
+ 
