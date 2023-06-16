@@ -61,8 +61,10 @@
       ; codes other than 200, 201, 202, 203, 204, 205, 207, 300, 301, 302, 303, 304, 307 
       ; indicate error
       (cond 
+        (= (:status resp) 401) (throw (ex-info (str "Status code: " (:status resp) " Reason: Invalid key or secret was entered") 
+                                                {:type ::post-error})) 
         (= (:status resp) 409) (throw (ex-info (str "Status code: " (:status resp) " Reason: Cannot insert a duplicate statement")
-                        {:type ::post-error}))
+                                                {:type ::post-error}))
         (> (:status resp) 307)  (throw (ex-info (str "Status code: " (:status resp) " Reason: " (:body resp))
                         {:type ::post-error}))
         :else {}))
