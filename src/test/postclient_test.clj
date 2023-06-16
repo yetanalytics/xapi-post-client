@@ -175,6 +175,10 @@
    "object" {"objectType" "StatementRef"
              "id" "invalid-uuid"}})
 
+(def stmt-wrong-format
+  {"wrong category" "id?"
+   "wrong category#2" "first name" "last name"})
+
 
 
 
@@ -232,26 +236,44 @@
       (catch Exception e 
         (is (= "port out of range:10000000" 
                (:message (second (:via (Throwable->map e)))))))))
-   (testing "testing for invalid username"
-     (try
-       (pc/post-statement "localhost" 8080 "invalidusername" "password" stmt-0)
-       (catch Exception e
-         (is (= "An invalid username or password was inputted"
-                  (:message (:data (first (:via (Throwable->map e))))))))))
-   (testing "testing for invalid password"
-     (try
-       (pc/post-statement "localhost" 8080 "username" "invalidpassword" stmt-0)
-       (catch Exception e
-         (is (= "An invalid username or password was inputted"
-                  (:message (:data (first (:via (Throwable->map e)))))))))))
+   )
+  
+    
+(deftest test-post-client-invalid-statement 
+  (testing "testing for statement with invalid object UUID"
+   (try 
+     (let [{:keys [port]} *test-lrs*] 
+       (pc/post-statement "localhost" port "username" "password" stmt-inval)) 
+     (catch Exception e 
+       (is (= :postclient/post-error 
+              (:type (:data (second (:via (Throwable->map e))))))))))
+  (testing "testing for statement with completely wrong format"
+    (try
+      (let [{:keys [port]} *test-lrs*]
+        (pc/post-statement "localhost" port "username" "password" stmt-wrong-format))
+      (catch Exception e
+        (is (= :postclient/post-error 
+              (:type (:data (second (:via (Throwable->map e)))))))))))
+  ;(testing "testing for POSTing a duplicate statement"))
 
-(deftest test-post-client-invalid-statement
-  (try
-    (pc/post-statement "localhost" 8080 "username" "password" stmt-invl)))
+
+
+;; archived for now
+  (comment
+    (testing "testing for invalid username"
+      (try
+        (let [id-0 (get stmt-0 "id")
+              {:keys [port]} *test-lrs*]
+          (pc/post-statement "localhost" port "invalidusername" "password" stmt-0))
+        (catch Exception e
+          (is (= "An invalid username or password was inputted"
+                 (:message (:data (first (:via (Throwable->map e))))))))))
+    (testing "testing for invalid password"
+      (try
+        (pc/post-statement "localhost" 8080 "username" "invalidpassword" stmt-0)
+        (catch Exception e
+          (is (= "An invalid username or password was inputted"
+                 (:message (:data (first (:via (Throwable->map e)))))))))))
 
 ; TODO:
-;; invalid xapi statement inputs
-;; completely wrong format
 ;; duplicate statements
-;; bad lrs??
-;; merge
