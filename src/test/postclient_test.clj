@@ -253,6 +253,22 @@
       (catch Exception e 
         (is (= "port out of range:10000000" 
                (:message (first (:via (Throwable->map e))))))))))
+
+
+ ; (testing "testing for invalid key"
+ ;   (try
+ ;     (let [{:keys [port]} *test-lrs*]
+ ;       (pc/post-statement "localhost" port "wrong_username" "password" stmt-inval))
+ ;     (catch Exception e
+ ;       (is (= :postclient/auth-error
+ ;              (:type (:data (first (:via (Throwable->map e))))))))))
+ ; (testing "testing for invalid secret"
+ ;   (try
+ ;     (let [{:keys [port]} *test-lrs*]
+ ;       (pc/post-statement "localhost" port "username" "wrong_password" stmt-inval))
+ ;     (catch Exception e
+ ;      (is (= :postclient/auth-error
+ ;              (:type (:data (first (:via (Throwable->map e))))))))))
   
     
 (deftest test-post-client-invalid-statements 
@@ -288,6 +304,10 @@
         (is (= :postclient/post-error
                (:type (:data (first (:via (Throwable->map e)))))))))))
 
+
+;TODO:
+; configure LRS to take in specific user/pass and then test wrong user/pass to catch
+; status 401 or postclient/post-error
   
   
   
