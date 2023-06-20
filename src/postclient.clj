@@ -62,7 +62,7 @@
       ; indicate error
       (cond 
         (= (:status resp) 401) (throw (ex-info (str "Status code: " (:status resp) " Reason: Invalid key or secret was entered") 
-                                                {:type ::post-error})) 
+                                                {:type ::auth-error})) 
         (= (:status resp) 409) (throw (ex-info (str "Status code: " (:status resp) " Reason: Cannot insert a duplicate statement")
                                                 {:type ::post-error}))
         (> (:status resp) 307)  (throw (ex-info (str "Status code: " (:status resp) " Reason: " (:body resp))
