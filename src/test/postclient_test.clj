@@ -11,6 +11,7 @@
   (:import [java.net ServerSocket]))
 
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Init Test Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -25,6 +26,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (defn- remove-props
   "Remove properties added by `prepare-statement`."
@@ -53,7 +55,7 @@
     (.getLocalPort socket)))
 
 
-(defn create_lrs
+(defn create-lrs
   "Creates a unified object to start/stop a LRS instance:
   :port - For debugging
   :lrs - The LRS itself
@@ -64,7 +66,36 @@
   [& {:keys [port]}]
   (let [port (or port
                  (get-free-port))
-        lrs (mem/new-lrs {:mode :sync})
+        mem-lrs (mem/new-lrs {:mode :sync})
+        lrs (reify 
+              lrsp/LRSAuth 
+              (lrsp/-authenticate [this ctx]
+                (let [header (get-in ctx [:request :headers "authorization"])
+                      key (:api-key (lrsql.util.auth/header->key-pair header))
+                      secret (:secret-ley (lrsql.util.auth/header->key-pair header))]
+                  (if (and (= 0 (compare key "username")) (= 0 (compare secret "password")))
+                    {:result
+                     {:scopes #{:scope/all},
+                      :prefix "",
+                      :auth {:basic {:username "username", :password "password"}},
+                      :agent
+                      {"account"
+                       {"homePage" "http://example.org",
+                        "name" "0188bab2-f0ab-8926-8c27-a4858a1fc04d"},
+                       "objectType" "Agent"}}}
+                    {:result :com.yetanalytics.lrs.auth/unauthorized})))
+              (lrsp/-authorize [this ctx auth-identity] 
+                (lrsp/-authorize mem-lrs ctx auth-identity)) 
+              lrsp/StatementsResource 
+              (lrsp/-store-statements [this auth-identity statements attachments]
+                                      (lrsp/-store-statements mem-lrs auth-identity statements attachments)) 
+              (lrsp/-get-statements [this auth-identity params ltags] 
+                                    (lrsp/-get-statements mem-lrs auth-identity params ltags)) 
+              (lrsp/-consistent-through [this ctx auth-identity] 
+                                        (lrsp/-consistent-through mem-lrs ctx auth-identity)) 
+              com.yetanalytics.lrs.impl.memory/DumpableMemoryLRS 
+              (com.yetanalytics.lrs.impl.memory/dump [_] 
+                                                     (com.yetanalytics.lrs.impl.memory/dump mem-lrs)))
         service
         {:env                   :dev
          :lrs                   lrs
@@ -109,7 +140,7 @@
   [f] 
   (let [{start-test :start 
          stop-test :stop 
-         :as test} (create_lrs)]
+         :as test} (create-lrs)]
     (try
       ;; start LRS --> shutdown if exceptions are thrown 
       (start-test) 
@@ -212,7 +243,6 @@
     (testing "testing if statements match"
       (is (= {:statement stmt-0}
              (get-ss lrs auth-ident {:statementId id-0} #{}))))))
-
 (deftest test-post-client-st1
   (let [id-1  (get stmt-1 "id")
         {:keys [port lrs]} *test-lrs*]
@@ -305,14 +335,7 @@
                (:type (:data (first (:via (Throwable->map e)))))))))))
 
 
-;TODO:
-; configure LRS to take in specific user/pass and then test wrong user/pass to catch
-; status 401 or postclient/post-error
-  
-  
   
 
 
 
-
- 
