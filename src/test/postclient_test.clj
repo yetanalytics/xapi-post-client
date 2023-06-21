@@ -1,5 +1,6 @@
 (ns postclient-test
-  (:require [clojure.test   :refer [deftest is testing use-fixtures]]
+  (:require [clojure.test   :refer [deftest is testing use-fixtures]] 
+            [clojure.string :as cstr]
             [clojure.tools.logging :as log]
             [com.yetanalytics.lrs :as lrs]
             [com.yetanalytics.lrs.impl.memory :as mem]
@@ -8,7 +9,9 @@
             [com.yetanalytics.lrs.protocol  :as lrsp]
             [io.pedestal.http :as http]
             [postclient :as pc])
-  (:import [java.net ServerSocket]))
+  (:import [java.net ServerSocket]
+           [java.util Base64 Base64$Decoder]
+           [java.nio.charset Charset]))
 
 
 
@@ -27,6 +30,36 @@
 ;; Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; helper functions for testing user/pass params
+
+(def utf8-charset
+  (Charset/forName "UTF-8"))
+
+(def ^Base64$Decoder decoder
+  "The default Base64 decoder."
+  (Base64/getDecoder))
+
+(defn bytes->str
+  "Converts `bytes` into a string. Assumes UTF-8 encoding."
+  [^"[B" bytes]
+  (String. bytes utf8-charset))
+
+(defn header->key-pair
+  "Given a header of the form `Basic [Base64 string]`, return a map with keys
+   `:api-key` and `:secret-key`. The map can then be used as the input to
+   `query-authentication`. Return `nil` if the header is `nil` or cannot
+   be decoded."
+  [auth-header]
+  (when auth-header
+    (try (let [^String auth-part   (second (re-matches #"Basic\s+(.*)"
+                                                       auth-header))
+               ^String decoded     (bytes->str (.decode decoder auth-part))
+               [?api-key ?srt-key] (cstr/split decoded #":")]
+           {:api-key    (if ?api-key ?api-key "")
+            :secret-key (if ?srt-key ?srt-key "")})
+         (catch Exception _ nil))))
+
+;; helper functions for testing successful POST
 
 (defn- remove-props
   "Remove properties added by `prepare-statement`."
@@ -62,17 +95,18 @@
   :start - A function of no args that will start the LRS
   :stop - A function of no args that will stop the LRS
   :dump - A function of no args that will dump memory LRS state
-  :load - A function of two args, statements and attachments to load data"
+  :load - A function of two args, statements and attachments to load data" 
   [& {:keys [port]}]
   (let [port (or port
                  (get-free-port))
         mem-lrs (mem/new-lrs {:mode :sync})
+        ;; adding user/pass auth credientials to lrs instance
         lrs (reify 
               lrsp/LRSAuth 
               (lrsp/-authenticate [this ctx]
                 (let [header (get-in ctx [:request :headers "authorization"])
-                      key (:api-key (lrsql.util.auth/header->key-pair header))
-                      secret (:secret-ley (lrsql.util.auth/header->key-pair header))]
+                      key (:api-key (header->key-pair header))
+                      secret (:secret-key (header->key-pair header))]
                   (if (and (= 0 (compare key "username")) (= 0 (compare secret "password")))
                     {:result
                      {:scopes #{:scope/all},
@@ -282,23 +316,21 @@
      (pc/post-statement "localhost" 10000000 "username" "password" stmt-0)
       (catch Exception e 
         (is (= "port out of range:10000000" 
-               (:message (first (:via (Throwable->map e))))))))))
-
-
- ; (testing "testing for invalid key"
- ;   (try
- ;     (let [{:keys [port]} *test-lrs*]
- ;       (pc/post-statement "localhost" port "wrong_username" "password" stmt-inval))
- ;     (catch Exception e
- ;       (is (= :postclient/auth-error
- ;              (:type (:data (first (:via (Throwable->map e))))))))))
- ; (testing "testing for invalid secret"
- ;   (try
- ;     (let [{:keys [port]} *test-lrs*]
- ;       (pc/post-statement "localhost" port "username" "wrong_password" stmt-inval))
- ;     (catch Exception e
- ;      (is (= :postclient/auth-error
- ;              (:type (:data (first (:via (Throwable->map e))))))))))
+               (:message (first (:via (Throwable->map e)))))))))
+  (testing "testing for invalid key"
+    (try
+      (let [{:keys [port]} *test-lrs*]
+        (pc/post-statement "localhost" port "wrong_username" "password" stmt-inval))
+      (catch Exception e
+        (is (= :postclient/auth-error
+               (:type (:data (first (:via (Throwable->map e))))))))))
+  (testing "testing for invalid secret"
+    (try
+      (let [{:keys [port]} *test-lrs*]
+        (pc/post-statement "localhost" port "username" "wrong_password" stmt-inval))
+      (catch Exception e
+       (is (= :postclient/auth-error
+               (:type (:data (first (:via (Throwable->map e)))))))))))
   
     
 (deftest test-post-client-invalid-statements 
