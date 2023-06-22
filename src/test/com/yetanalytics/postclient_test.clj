@@ -311,28 +311,28 @@
     (try
       (pc/post-statement "invalidhost" 8080 "username" "password" stmt-0)
       (catch Exception e 
-        (is (= "An invalid hostname was inputted"
-                  (:message (:data (first (:via (Throwable->map e))))))))))
+        (is (= "An invalid hostname was inputted" 
+               (-> e Throwable->map :via first :data :message))))))
   (testing "testing for invalid port number"
     (try
      (pc/post-statement "localhost" 10000000 "username" "password" stmt-0)
       (catch Exception e 
-        (is (= "port out of range:10000000" 
-               (:message (first (:via (Throwable->map e)))))))))
+        (is (= "port out of range:10000000"
+               (-> e Throwable->map :via first :message))))))
   (testing "testing for invalid key"
     (try
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "wrong_username" "password" stmt-inval))
       (catch Exception e
         (is (= :com.yetanalytics.postclient/auth-error
-               (:type (:data (first (:via (Throwable->map e))))))))))
+               (-> e Throwable->map :via first :data :type))))))
   (testing "testing for invalid secret"
     (try
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "username" "wrong_password" stmt-inval))
       (catch Exception e
        (is (= :com.yetanalytics.postclient/auth-error
-               (:type (:data (first (:via (Throwable->map e)))))))))))
+               (-> e Throwable->map :via first :data :type)))))))
   
     
 (deftest test-post-client-invalid-statements 
@@ -342,21 +342,21 @@
        (pc/post-statement "localhost" port "username" "password" stmt-inval)) 
      (catch Exception e 
        (is (= :com.yetanalytics.postclient/post-error 
-              (:type (:data (first (:via (Throwable->map e))))))))))
+              (-> e Throwable->map :via first :data :type))))))
   (testing "testing for statement with completely wrong format"
     (try
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "username" "password" stmt-wrong-format))
       (catch Exception e
         (is (= :com.yetanalytics.postclient/post-error
-               (:type (:data (first (:via (Throwable->map e))))))))))
+               (-> e Throwable->map :via first :data :type))))))
   (testing "testing for statement with no verb and object" 
     (try 
       (let [{:keys [port]} *test-lrs*] 
         (pc/post-statement "localhost" port "username" "password" stmt-incomplete)) 
       (catch Exception e 
         (is (= :com.yetanalytics.postclient/post-error 
-               (:type (:data (first (:via (Throwable->map e)))))))))))
+               (-> e Throwable->map :via first :data :type)))))))
   
 (deftest test-post-client-duplicate-statements
   (testing "testing for POSTing a duplicate statement"
@@ -365,8 +365,8 @@
         (pc/post-statement "localhost" port "username" "password" stmt-0)
         (pc/post-statement "localhost" port "username" "password" stmt-0-changed))
       (catch Exception e
-        (is (= :com.yetanalytics.postclient/post-error
-               (:type (:data (first (:via (Throwable->map e)))))))))))
+        (is (= :com.yetanalytics.postclient/post-error 
+               (-> e Throwable->map :via first :data :type)))))))
 
 
   
