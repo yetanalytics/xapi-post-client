@@ -13,12 +13,9 @@
            [java.util Base64 Base64$Decoder]
            [java.nio.charset Charset]))
 
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Init Test Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 (def auth-ident
   {:agent  {"objectType" "Agent"
@@ -191,7 +188,6 @@
 ;; Sample statements
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (def stmt-0
   {"id"     "00000000-0000-4000-8000-000000000000"
    "actor" {"objectType" "Agent"
@@ -263,10 +259,6 @@
             "name" "Darshan Fester"
             "mbox" "mailto:darshan@example.adlnet.gov"}})
 
-
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Unit tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -279,6 +271,7 @@
     (testing "testing if statements match"
       (is (= {:statement stmt-0}
              (get-ss lrs auth-ident {:statementId id-0} #{}))))))
+
 (deftest test-post-client-st1
   (let [id-1  (get stmt-1 "id")
         {:keys [port lrs]} *test-lrs*]
@@ -334,7 +327,6 @@
        (is (= :com.yetanalytics.postclient/auth-error
                (-> e Throwable->map :via first :data :type)))))))
   
-    
 (deftest test-post-client-invalid-statements 
   (testing "testing for statement with invalid object UUID"
    (try 
@@ -367,9 +359,3 @@
       (catch Exception e
         (is (= :com.yetanalytics.postclient/post-error 
                (-> e Throwable->map :via first :data :type)))))))
-
-
-  
-
-
-

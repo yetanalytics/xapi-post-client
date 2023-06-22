@@ -16,7 +16,6 @@
                 :throw-exceptions false
                 :throw-entire-message? true}))
 
-
 (defn post-statement
   [host port key secret statement]
   (try
@@ -45,6 +44,3 @@
                       {:type ::invalid-host-error
                        :message "An invalid hostname was inputted"}
                       e)))))
-
-
-
