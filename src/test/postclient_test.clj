@@ -8,7 +8,7 @@
             [com.yetanalytics.lrs.pedestal.routes :refer [build]]
             [com.yetanalytics.lrs.protocol  :as lrsp]
             [io.pedestal.http :as http]
-            [postclient :as pc])
+            [com.yetanalytics.postclient :as pc])
   (:import [java.net ServerSocket]
            [java.util Base64 Base64$Decoder]
            [java.nio.charset Charset]))
