@@ -3,4 +3,5 @@
 .cpcache/
 .lsp/
 .nrepl/
+.nrepl-port/
 .DS_Store
