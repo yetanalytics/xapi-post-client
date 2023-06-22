@@ -87,7 +87,22 @@
   (with-open [socket (ServerSocket. 0)]
     (.getLocalPort socket)))
 
-
+(defn get-auth-result [ctx]
+  (let [header (get-in ctx [:request :headers "authorization"])
+        key (:api-key (header->key-pair header))
+        secret (:secret-key (header->key-pair header))]
+    (if (and (= 0 (compare key "username")) (= 0 (compare secret "password")))
+      {:result
+       {:scopes #{:scope/all},
+        :prefix "",
+        :auth {:basic {:username "username", :password "password"}},
+        :agent
+        {"account"
+         {"homePage" "http://example.org",
+          "name" "0188bab2-f0ab-8926-8c27-a4858a1fc04d"},
+         "objectType" "Agent"}}}
+      {:result :com.yetanalytics.lrs.auth/unauthorized})))
+  
 (defn create-lrs
   "Creates a unified object to start/stop a LRS instance:
   :port - For debugging
@@ -104,20 +119,7 @@
         lrs (reify 
               lrsp/LRSAuth 
               (lrsp/-authenticate [this ctx]
-                (let [header (get-in ctx [:request :headers "authorization"])
-                      key (:api-key (header->key-pair header))
-                      secret (:secret-key (header->key-pair header))]
-                  (if (and (= 0 (compare key "username")) (= 0 (compare secret "password")))
-                    {:result
-                     {:scopes #{:scope/all},
-                      :prefix "",
-                      :auth {:basic {:username "username", :password "password"}},
-                      :agent
-                      {"account"
-                       {"homePage" "http://example.org",
-                        "name" "0188bab2-f0ab-8926-8c27-a4858a1fc04d"},
-                       "objectType" "Agent"}}}
-                    {:result :com.yetanalytics.lrs.auth/unauthorized})))
+                (get-auth-result ctx))
               (lrsp/-authorize [this ctx auth-identity] 
                 (lrsp/-authorize mem-lrs ctx auth-identity)) 
               lrsp/StatementsResource 
@@ -322,14 +324,14 @@
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "wrong_username" "password" stmt-inval))
       (catch Exception e
-        (is (= :postclient/auth-error
+        (is (= :com.yetanalytics.postclient/auth-error
                (:type (:data (first (:via (Throwable->map e))))))))))
   (testing "testing for invalid secret"
     (try
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "username" "wrong_password" stmt-inval))
       (catch Exception e
-       (is (= :postclient/auth-error
+       (is (= :com.yetanalytics.postclient/auth-error
                (:type (:data (first (:via (Throwable->map e)))))))))))
   
     
@@ -339,21 +341,21 @@
      (let [{:keys [port]} *test-lrs*] 
        (pc/post-statement "localhost" port "username" "password" stmt-inval)) 
      (catch Exception e 
-       (is (= :postclient/post-error 
+       (is (= :com.yetanalytics.postclient/post-error 
               (:type (:data (first (:via (Throwable->map e))))))))))
   (testing "testing for statement with completely wrong format"
     (try
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "username" "password" stmt-wrong-format))
       (catch Exception e
-        (is (= :postclient/post-error
+        (is (= :com.yetanalytics.postclient/post-error
                (:type (:data (first (:via (Throwable->map e))))))))))
   (testing "testing for statement with no verb and object" 
     (try 
       (let [{:keys [port]} *test-lrs*] 
         (pc/post-statement "localhost" port "username" "password" stmt-incomplete)) 
       (catch Exception e 
-        (is (= :postclient/post-error 
+        (is (= :com.yetanalytics.postclient/post-error 
                (:type (:data (first (:via (Throwable->map e)))))))))))
   
 (deftest test-post-client-duplicate-statements
@@ -363,7 +365,7 @@
         (pc/post-statement "localhost" port "username" "password" stmt-0)
         (pc/post-statement "localhost" port "username" "password" stmt-0-changed))
       (catch Exception e
-        (is (= :postclient/post-error
+        (is (= :com.yetanalytics.postclient/post-error
                (:type (:data (first (:via (Throwable->map e)))))))))))
 
 
