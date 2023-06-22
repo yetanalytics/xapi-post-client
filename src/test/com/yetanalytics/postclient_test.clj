@@ -113,22 +113,22 @@
                  (get-free-port))
         mem-lrs (mem/new-lrs {:mode :sync})
         ;; adding user/pass auth credientials to lrs instance
-        lrs (reify 
-              lrsp/LRSAuth 
+        lrs (reify
+              lrsp/LRSAuth
               (lrsp/-authenticate [this ctx]
                 (get-auth-result ctx))
-              (lrsp/-authorize [this ctx auth-identity] 
-                (lrsp/-authorize mem-lrs ctx auth-identity)) 
-              lrsp/StatementsResource 
+              (lrsp/-authorize [this ctx auth-identity]
+                (lrsp/-authorize mem-lrs ctx auth-identity))
+              lrsp/StatementsResource
               (lrsp/-store-statements [this auth-identity statements attachments]
-                                      (lrsp/-store-statements mem-lrs auth-identity statements attachments)) 
-              (lrsp/-get-statements [this auth-identity params ltags] 
-                                    (lrsp/-get-statements mem-lrs auth-identity params ltags)) 
-              (lrsp/-consistent-through [this ctx auth-identity] 
-                                        (lrsp/-consistent-through mem-lrs ctx auth-identity)) 
-              com.yetanalytics.lrs.impl.memory/DumpableMemoryLRS 
-              (com.yetanalytics.lrs.impl.memory/dump [_] 
-                                                     (com.yetanalytics.lrs.impl.memory/dump mem-lrs)))
+                (lrsp/-store-statements mem-lrs auth-identity statements attachments))
+              (lrsp/-get-statements [this auth-identity params ltags]
+                (lrsp/-get-statements mem-lrs auth-identity params ltags))
+              (lrsp/-consistent-through [this ctx auth-identity]
+                (lrsp/-consistent-through mem-lrs ctx auth-identity))
+              com.yetanalytics.lrs.impl.memory/DumpableMemoryLRS
+              (com.yetanalytics.lrs.impl.memory/dump [_]
+                (com.yetanalytics.lrs.impl.memory/dump mem-lrs)))
         service
         {:env                   :dev
          :lrs                   lrs
@@ -269,7 +269,7 @@
     ;; insert to lrs
     (pc/post-statement "localhost" port "username" "password" stmt-0)
     (testing "testing if statements match"
-      (is (= {:statement stmt-0}
+      (is (= {:statement stmt-0} 
              (get-ss lrs auth-ident {:statementId id-0} #{}))))))
 
 (deftest test-post-client-st1
@@ -317,14 +317,14 @@
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "wrong_username" "password" stmt-inval))
       (catch Exception e
-        (is (= :com.yetanalytics.postclient/auth-error
+        (is (= ::pc/auth-error
                (-> e Throwable->map :via first :data :type))))))
   (testing "testing for invalid secret"
     (try
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "username" "wrong_password" stmt-inval))
       (catch Exception e
-       (is (= :com.yetanalytics.postclient/auth-error
+        (is (= ::pc/auth-error
                (-> e Throwable->map :via first :data :type)))))))
   
 (deftest test-post-client-invalid-statements 
@@ -333,21 +333,21 @@
      (let [{:keys [port]} *test-lrs*] 
        (pc/post-statement "localhost" port "username" "password" stmt-inval)) 
      (catch Exception e 
-       (is (= :com.yetanalytics.postclient/post-error 
+       (is (= ::pc/post-error 
               (-> e Throwable->map :via first :data :type))))))
   (testing "testing for statement with completely wrong format"
     (try
       (let [{:keys [port]} *test-lrs*]
         (pc/post-statement "localhost" port "username" "password" stmt-wrong-format))
       (catch Exception e
-        (is (= :com.yetanalytics.postclient/post-error
+        (is (= ::pc/post-error
                (-> e Throwable->map :via first :data :type))))))
   (testing "testing for statement with no verb and object" 
     (try 
       (let [{:keys [port]} *test-lrs*] 
         (pc/post-statement "localhost" port "username" "password" stmt-incomplete)) 
       (catch Exception e 
-        (is (= :com.yetanalytics.postclient/post-error 
+        (is (= ::pc/post-error 
                (-> e Throwable->map :via first :data :type)))))))
   
 (deftest test-post-client-duplicate-statements
@@ -357,5 +357,5 @@
         (pc/post-statement "localhost" port "username" "password" stmt-0)
         (pc/post-statement "localhost" port "username" "password" stmt-0-changed))
       (catch Exception e
-        (is (= :com.yetanalytics.postclient/post-error 
+        (is (= ::pc/post-error 
                (-> e Throwable->map :via first :data :type)))))))
