@@ -1,7 +1,7 @@
-(ns postclient
+(ns com.yetanalytics.postclient
   (:require [cheshire.core :refer :all]
             [clj-http.client :as client]) 
-  (:import [java.net ConnectException UnknownHostException]))
+  (:import [java.net UnknownHostException]))
 
 (def headers
   {"Content-Type" "application/json"
