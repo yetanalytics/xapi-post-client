@@ -39,7 +39,7 @@
 (defn bytes->str
   "Converts `bytes` into a string. Assumes UTF-8 encoding."
   [^"[B" bytes]
-  (^String. bytes utf8-charset))
+  (String. bytes utf8-charset))
 
 (defn header->key-pair
   "Given a header of the form `Basic [Base64 string]`, return a map with keys
@@ -111,19 +111,19 @@
         ;; adding user/pass auth credientials to lrs instance
         lrs (reify
               lrsp/LRSAuth
-              (lrsp/-authenticate [this ctx]
+              (-authenticate [this ctx]
                 (get-auth-result ctx))
-              (lrsp/-authorize [this ctx auth-identity]
+              (-authorize [this ctx auth-identity]
                 (lrsp/-authorize mem-lrs ctx auth-identity))
               lrsp/StatementsResource
-              (lrsp/-store-statements [this auth-identity statements attachments]
+              (-store-statements [this auth-identity statements attachments]
                 (lrsp/-store-statements mem-lrs auth-identity statements attachments))
-              (lrsp/-get-statements [this auth-identity params ltags]
+              (-get-statements [this auth-identity params ltags]
                 (lrsp/-get-statements mem-lrs auth-identity params ltags))
-              (lrsp/-consistent-through [this ctx auth-identity]
+              (-consistent-through [this ctx auth-identity]
                 (lrsp/-consistent-through mem-lrs ctx auth-identity))
               mem/DumpableMemoryLRS
-              (mem/dump [_]
+              (dump [_]
                 (mem/dump mem-lrs)))
         service
         {:env                   :dev
