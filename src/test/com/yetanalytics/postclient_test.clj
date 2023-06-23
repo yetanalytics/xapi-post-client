@@ -261,7 +261,7 @@
 ;; Unit tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(deftest test-post-client-st0
+(deftest test-post-client-stmts
   (let [id-0  (get stmt-0 "id")
         id-1  (get stmt-1 "id")
         id-2  (get stmt-2 "id")
@@ -269,16 +269,14 @@
         {:keys [port lrs]} *test-lrs*
         endpoint (format uri port)]
     ;; insert statements to lrs
-    (pc/post-statement endpoint "username" "password" stmt-0) 
-    (pc/post-statement endpoint "username" "password" stmt-1)
-    (pc/post-statement endpoint "username" "password" stmt-2)
-    (pc/post-statement endpoint "username" "password" stmt-3) 
-    (testing "testing if statements match" 
-      (are [x y] (= x y)
-        {:statement stmt-0} (get-ss lrs auth-ident {:statementId id-0} #{})
-        {:statement stmt-1} (get-ss lrs auth-ident {:statementId id-1} #{})
-        {:statement stmt-2} (get-ss lrs auth-ident {:statementId id-2} #{})
-        {:statement stmt-3} (get-ss lrs auth-ident {:statementId id-3} #{})))))
+    (doseq [stmts [stmt-0 stmt-1 stmt-2 stmt-3]]
+           (pc/post-statement endpoint "username" "password" stmts))
+    (testing "testing if statements match"
+      (are [stmt id] (= {:statement stmt} (get-ss lrs auth-ident {:statementId id} #{}))
+        stmt-0 id-0
+        stmt-1 id-1
+        stmt-2 id-2
+        stmt-3 id-3))))
 
 (deftest test-post-client-invalid-args
   (testing "testing for invalid hostname" 
