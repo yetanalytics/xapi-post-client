@@ -1,5 +1,5 @@
 (ns com.yetanalytics.postclient-test
-  (:require [clojure.test   :refer [deftest is testing use-fixtures]] 
+  (:require [clojure.test   :refer [deftest is are testing use-fixtures]] 
             [clojure.string :as cstr]
             [clojure.tools.logging :as log]
             [com.yetanalytics.lrs :as lrs]
@@ -261,39 +261,21 @@
 
 (deftest test-post-client-st0
   (let [id-0  (get stmt-0 "id")
+        id-1  (get stmt-1 "id")
+        id-2  (get stmt-2 "id")
+        id-3  (get stmt-3 "id")
         {:keys [port lrs]} *test-lrs*]
-    ;; insert to lrs
-    (pc/post-statement "localhost" port "username" "password" stmt-0)
-    (testing "testing if statements match"
-      (is (= {:statement stmt-0} 
-             (get-ss lrs auth-ident {:statementId id-0} #{}))))))
-
-(deftest test-post-client-st1
-  (let [id-1  (get stmt-1 "id")
-        {:keys [port lrs]} *test-lrs*]
-    ;; insert to lrs
+    ;; insert statements to lrs
+    (pc/post-statement "localhost" port "username" "password" stmt-0) 
     (pc/post-statement "localhost" port "username" "password" stmt-1)
-    (testing "testing if statements match"
-      (is (= {:statement stmt-1}
-             (get-ss lrs auth-ident {:statementId id-1} #{}))))))
-
-(deftest test-post-client-st2
-  (let [id-2  (get stmt-2 "id")
-        {:keys [port lrs]} *test-lrs*]
-    ;; insert to lrs
     (pc/post-statement "localhost" port "username" "password" stmt-2)
-    (testing "testing if statements match"
-      (is (= {:statement stmt-2}
-             (get-ss lrs auth-ident {:statementId id-2} #{}))))))
-
-(deftest test-post-client-st3
-  (let [id-3  (get stmt-3 "id")
-        {:keys [port lrs]} *test-lrs*]
-    ;; insert to lrs
-    (pc/post-statement "localhost" port "username" "password" stmt-3)
-    (testing "testing if statements match"
-      (is (= {:statement stmt-3}
-             (get-ss lrs auth-ident {:statementId id-3} #{}))))))
+    (pc/post-statement "localhost" port "username" "password" stmt-3) 
+    (testing "testing if statements match" 
+      (are [x y] (= x y)
+        {:statement stmt-0} (get-ss lrs auth-ident {:statementId id-0} #{})
+        {:statement stmt-1} (get-ss lrs auth-ident {:statementId id-1} #{})
+        {:statement stmt-2} (get-ss lrs auth-ident {:statementId id-2} #{})
+        {:statement stmt-3} (get-ss lrs auth-ident {:statementId id-3} #{})))))
 
 (deftest test-post-client-invalid-args
   (testing "testing for invalid hostname" 
