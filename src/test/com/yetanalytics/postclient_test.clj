@@ -163,7 +163,7 @@
 
 ;; fixture for uniformed testing
 (def ^:dynamic *test-lrs* nil)
-(defn test-fixture
+(defn lrs-fixture
   "Populate *test-lrs* with started a LRS on a free port
   LRSs are empty by default unless seed-path is provided"
   [f] 
@@ -178,7 +178,7 @@
       (finally 
         (stop-test)))))
 
-(use-fixtures :each test-fixture)
+(use-fixtures :each lrs-fixture)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Sample statements
