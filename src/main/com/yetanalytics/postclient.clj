@@ -8,8 +8,8 @@
    "X-Experience-API-Version" "1.0.3"}) 
 
 (defn- post-statement* 
-  [host port key secret statement]
-  (client/post (str "http://" host ":" port "/xapi/statements")
+  [endpoint key secret statement]
+  (client/post (str endpoint "/statements")
                {:basic-auth [key secret]
                 :body (json/generate-string statement)
                 :headers headers
@@ -17,9 +17,9 @@
                 :throw-entire-message? true}))
 
 (defn post-statement
-  [host port key secret statement]
+  [endpoint key secret statement]
   (try
-    (let [resp (post-statement* host port key secret statement)
+    (let [resp (post-statement* endpoint key secret statement)
           status (:status resp)]
       ; handling error status codes
       ; codes other than 200, 201, 202, 203, 204, 205, 207, 300, 301, 302, 303, 304, 307 

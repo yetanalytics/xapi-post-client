@@ -255,6 +255,8 @@
             "name" "Darshan Fester"
             "mbox" "mailto:darshan@example.adlnet.gov"}})
 
+(def uri "http://localhost:%d/xapi")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Unit tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -264,12 +266,13 @@
         id-1  (get stmt-1 "id")
         id-2  (get stmt-2 "id")
         id-3  (get stmt-3 "id")
-        {:keys [port lrs]} *test-lrs*]
+        {:keys [port lrs]} *test-lrs*
+        endpoint (format uri port)]
     ;; insert statements to lrs
-    (pc/post-statement "localhost" port "username" "password" stmt-0) 
-    (pc/post-statement "localhost" port "username" "password" stmt-1)
-    (pc/post-statement "localhost" port "username" "password" stmt-2)
-    (pc/post-statement "localhost" port "username" "password" stmt-3) 
+    (pc/post-statement endpoint "username" "password" stmt-0) 
+    (pc/post-statement endpoint "username" "password" stmt-1)
+    (pc/post-statement endpoint "username" "password" stmt-2)
+    (pc/post-statement endpoint "username" "password" stmt-3) 
     (testing "testing if statements match" 
       (are [x y] (= x y)
         {:statement stmt-0} (get-ss lrs auth-ident {:statementId id-0} #{})
@@ -280,27 +283,27 @@
 (deftest test-post-client-invalid-args
   (testing "testing for invalid hostname" 
     (try
-      (pc/post-statement "invalidhost" 8080 "username" "password" stmt-0)
+      (pc/post-statement "http://invalidhost:8080/xapi" "username" "password" stmt-0)
       (catch Exception e 
         (is (= ::pc/invalid-host-error 
                (-> e Throwable->map :via first :data :type))))))
   (testing "testing for invalid port number"
     (try
-     (pc/post-statement "localhost" 10000000 "username" "password" stmt-0)
+     (pc/post-statement "http://localhost:10000000/xapi" "username" "password" stmt-0)
       (catch Exception e 
         (is (= "port out of range:10000000"
                (-> e Throwable->map :via first :message))))))
   (testing "testing for invalid key"
     (try
       (let [{:keys [port]} *test-lrs*]
-        (pc/post-statement "localhost" port "wrong_username" "password" stmt-inval))
+        (pc/post-statement (format uri port) "wrong_username" "password" stmt-inval))
       (catch Exception e
         (is (= ::pc/auth-error
                (-> e Throwable->map :via first :data :type))))))
   (testing "testing for invalid secret"
     (try
       (let [{:keys [port]} *test-lrs*]
-        (pc/post-statement "localhost" port "username" "wrong_password" stmt-inval))
+        (pc/post-statement (format uri port) "username" "wrong_password" stmt-inval))
       (catch Exception e
         (is (= ::pc/auth-error
                (-> e Throwable->map :via first :data :type)))))))
@@ -309,21 +312,21 @@
   (testing "testing for statement with invalid object UUID"
    (try 
      (let [{:keys [port]} *test-lrs*] 
-       (pc/post-statement "localhost" port "username" "password" stmt-inval)) 
+       (pc/post-statement (format uri port) "username" "password" stmt-inval)) 
      (catch Exception e 
        (is (= ::pc/post-error 
               (-> e Throwable->map :via first :data :type))))))
   (testing "testing for statement with completely wrong format"
     (try
       (let [{:keys [port]} *test-lrs*]
-        (pc/post-statement "localhost" port "username" "password" stmt-wrong-format))
+        (pc/post-statement (format uri port) "username" "password" stmt-wrong-format))
       (catch Exception e
         (is (= ::pc/post-error
                (-> e Throwable->map :via first :data :type))))))
   (testing "testing for statement with no verb and object" 
     (try 
       (let [{:keys [port]} *test-lrs*] 
-        (pc/post-statement "localhost" port "username" "password" stmt-incomplete)) 
+        (pc/post-statement (format uri port) "username" "password" stmt-incomplete)) 
       (catch Exception e 
         (is (= ::pc/post-error 
                (-> e Throwable->map :via first :data :type)))))))
@@ -332,8 +335,8 @@
   (testing "testing for POSTing a duplicate statement"
     (try
       (let [{:keys [port]} *test-lrs*]
-        (pc/post-statement "localhost" port "username" "password" stmt-0)
-        (pc/post-statement "localhost" port "username" "password" stmt-0-changed))
+        (pc/post-statement (format uri port) "username" "password" stmt-0)
+        (pc/post-statement (format uri port) "username" "password" stmt-0-changed))
       (catch Exception e
         (is (= ::pc/post-error 
                (-> e Throwable->map :via first :data :type)))))))
