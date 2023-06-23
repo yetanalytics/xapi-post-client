@@ -81,9 +81,9 @@
     (.getLocalPort socket)))
 
 (defn get-auth-result [ctx]
-  (let [header (get-in ctx [:request :headers "authorization"])
-        key (:api-key (header->key-pair header))
-        secret (:secret-key (header->key-pair header))]
+  (let [header (header->key-pair (get-in ctx [:request :headers "authorization"]))
+        key (:api-key header)
+        secret (:secret-key header)]
     (if (and (= key "username") (= secret "password"))
       {:result
        {:scopes #{:scope/all},
