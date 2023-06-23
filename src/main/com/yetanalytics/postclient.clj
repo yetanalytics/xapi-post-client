@@ -1,5 +1,5 @@
 (ns com.yetanalytics.postclient
-  (:require [cheshire.core :refer :all]
+  (:require [cheshire.core :as json]
             [clj-http.client :as client]) 
   (:import [java.net UnknownHostException]))
 
@@ -11,7 +11,7 @@
   [host port key secret statement]
   (client/post (str "http://" host ":" port "/xapi/statements")
                {:basic-auth [key secret]
-                :body (generate-string statement)
+                :body (json/generate-string statement)
                 :headers headers
                 :throw-exceptions false
                 :throw-entire-message? true}))
@@ -42,4 +42,8 @@
      (catch UnknownHostException e
        (throw (ex-info (str "An invalid hostname was inputted")
                        {:type ::invalid-host-error}
+                       e)))
+     (catch Exception e
+       (throw (ex-info (str "An unexpected error has occured")
+                       {:type ::functional-error}
                        e)))))
