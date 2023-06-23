@@ -84,7 +84,7 @@
   (let [header (get-in ctx [:request :headers "authorization"])
         key (:api-key (header->key-pair header))
         secret (:secret-key (header->key-pair header))]
-    (if (and (= 0 (compare key "username")) (= 0 (compare secret "password")))
+    (if (and (= key "username") (= secret "password"))
       {:result
        {:scopes #{:scope/all},
         :prefix "",
