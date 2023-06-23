@@ -18,6 +18,3 @@
                                   :exclusions  
                                   [org.clojure/clojure org.clojure/clojurescript]} 
     io.pedestal/pedestal.jetty {:mvn/version "0.5.9"}}}}}
-
-
-
