@@ -110,7 +110,6 @@
         mem-lrs (mem/new-lrs {:mode :sync})
         ;; adding user/pass auth credientials to lrs instance
         lrs (reify
-              lrsp/LRSAuth
               (lrsp/-authenticate [this ctx]
                 (get-auth-result ctx))
               (lrsp/-authorize [this ctx auth-identity]
@@ -122,9 +121,8 @@
                 (lrsp/-get-statements mem-lrs auth-identity params ltags))
               (lrsp/-consistent-through [this ctx auth-identity]
                 (lrsp/-consistent-through mem-lrs ctx auth-identity))
-              com.yetanalytics.lrs.impl.memory/DumpableMemoryLRS
-              (com.yetanalytics.lrs.impl.memory/dump [_]
-                (com.yetanalytics.lrs.impl.memory/dump mem-lrs)))
+              (mem/dump [_]
+                (mem/dump mem-lrs)))
         service
         {:env                   :dev
          :lrs                   lrs
