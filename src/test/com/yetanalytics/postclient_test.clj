@@ -304,8 +304,8 @@
     (try
       (pc/post-statement "invalidhost" 8080 "username" "password" stmt-0)
       (catch Exception e 
-        (is (= "An invalid hostname was inputted" 
-               (-> e Throwable->map :via first :data :message))))))
+        (is (= ::pc/invalid-host-error 
+               (-> e Throwable->map :via first :data :type))))))
   (testing "testing for invalid port number"
     (try
      (pc/post-statement "localhost" 10000000 "username" "password" stmt-0)

@@ -7,7 +7,7 @@
   {"Content-Type" "application/json"
    "X-Experience-API-Version" "1.0.3"}) 
 
-(defn post-statement-helper 
+(defn- post-statement* 
   [host port key secret statement]
   (client/post (str "http://" host ":" port "/xapi/statements")
                {:basic-auth [key secret]
@@ -19,7 +19,7 @@
 (defn post-statement
   [host port key secret statement]
   (try
-    (let [resp (post-statement-helper host port key secret statement)]
+    (let [resp (post-statement* host port key secret statement)]
       ; handling error status codes
       ; codes other than 200, 201, 202, 203, 204, 205, 207, 300, 301, 302, 303, 304, 307 
       ; indicate error
@@ -39,8 +39,7 @@
         :else {}))
     ;; catching irregular exceptions   
     ;; invalid port and auth exception messages are sent out by clj.http
-    (catch UnknownHostException e
-      (throw (ex-info (str "Error: " (.getMessage e))
-                      {:type ::invalid-host-error
-                       :message "An invalid hostname was inputted"}
-                      e)))))
+     (catch UnknownHostException e
+       (throw (ex-info (str "An invalid hostname was inputted")
+                       {:type ::invalid-host-error}
+                       e)))))
