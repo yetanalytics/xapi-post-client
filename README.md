@@ -12,13 +12,15 @@ The library includes the function `post-statement` with the parameters `(post-st
 `Endpoint`: The URI of the LRS including the host and the port. "/statements" is automatically added to the end of the endpoint.
 
 `Key` and `Secret`: The Key and Secret to the specified LRS.
-`Statement`: The statement to POST
+
+`Statement`: The EDN formatted xAPI statement to POST
 
 Note: When there are no errors thrown, `post-statement` returns `nil`
 
 ## Example Usage
 
-```(def stmt-0
+```
+(def stmt-0
   {"id"     "00000000-0000-4000-8000-000000000000"
    "actor" {"objectType" "Agent"
             "name" "Eva Kim"
