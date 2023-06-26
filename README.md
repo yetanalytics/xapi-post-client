@@ -1,7 +1,5 @@
 # xapi-post-client
 
----
-
 ## Description
 
 This is a client library for POSTing xAPI statements to the specified Learning Record Store (LRS). The function
