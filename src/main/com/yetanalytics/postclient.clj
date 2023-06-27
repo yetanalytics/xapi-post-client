@@ -14,7 +14,8 @@
                 :body (json/generate-string statement)
                 :headers headers
                 :throw-exceptions false
-                :throw-entire-message? true}))
+                :throw-entire-message? true
+                :as :json}))
 
 (defn post-statement
   [endpoint key secret statement]
@@ -37,7 +38,8 @@
         (if (> (:status resp) 307)
           (throw (ex-info (str "Status code: " (:status resp)
                                " Reason: " (:body resp))
-                          {:type ::post-error})))))
+                          {:type ::post-error}))))
+      (:body resp))
     ;; catching irregular exceptions   
     ;; invalid port and auth exception messages are sent out by clj.http
     (catch UnknownHostException e

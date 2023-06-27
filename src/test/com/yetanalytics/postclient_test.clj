@@ -278,6 +278,20 @@
         stmt-2 id-2
         stmt-3 id-3))))
 
+(deftest test-post-client-return-value
+   (let [id-0  (get stmt-0 "id")
+         id-1  (get stmt-1 "id")
+         id-2  (get stmt-2 "id")
+         id-3  (get stmt-3 "id")
+         {:keys [port lrs]} *test-lrs*
+         endpoint (format uri port)]
+     (testing "testing if id matches return-id"
+       (are [id stmt] (= [id] (pc/post-statement endpoint "username" "password" stmt)) 
+         id-0 stmt-0
+         id-1 stmt-1
+         id-2 stmt-2
+         id-3 stmt-3))))
+
 (deftest test-post-client-invalid-args
   (testing "testing for invalid hostname" 
     (try
