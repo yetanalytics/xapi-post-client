@@ -98,6 +98,8 @@
          "objectType" "Agent"}}}
       {:result :com.yetanalytics.lrs.auth/unauthorized})))
 
+;; for error 301 redirect testing purposes
+
 (def simulate-301
   (interceptor
    {:name ::simulate-301

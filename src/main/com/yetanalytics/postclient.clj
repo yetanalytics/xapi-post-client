@@ -17,14 +17,12 @@
                 :throw-entire-message? true
                 :as :json}))
 
-;{:keys [status body]}
+;
 
 (defn post-statement
   [endpoint key secret statement]
   (try
-    (let [resp (post-statement* endpoint key secret statement)
-          status (:status resp)
-          body (:body resp)]
+    (let [{:keys [status body headers]} (post-statement* endpoint key secret statement)]
       ; handling error status codes
       ; codes other than 200, 201, 202, 203, 204, 205, 207, 300, 301, 302, 303, 304, 307 
       ; indicate error 
@@ -39,8 +37,7 @@
                                  " Reason: Cannot insert a duplicate statement")
                             {:type ::post-error}))
         (if (and (< status 308) (> status 299))
-          (throw (ex-info (str "Status code: " status " Location: " 
-                               (-> resp :headers :location))
+          (throw (ex-info (str "Status code: " status " Location: " (:location headers))
                           {:type ::redirect-error}))))
       ;; last error conditional
       (if (> status 307)
