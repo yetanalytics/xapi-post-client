@@ -1,11 +1,13 @@
 (ns com.yetanalytics.postclient-test
-  (:require [clojure.test   :refer [deftest is are testing use-fixtures]] 
+  (:require [clojure.test   :refer [deftest is are testing use-fixtures]]
             [clojure.string :as cstr]
             [clojure.tools.logging :as log]
             [com.yetanalytics.lrs :as lrs]
             [com.yetanalytics.lrs.impl.memory :as mem]
             [com.yetanalytics.lrs.pedestal.interceptor :as i]
             [com.yetanalytics.lrs.pedestal.routes :refer [build]]
+            [io.pedestal.interceptor.chain :as chain]
+            [io.pedestal.interceptor :refer [interceptor]]
             [com.yetanalytics.lrs.protocol  :as lrsp]
             [io.pedestal.http :as http]
             [com.yetanalytics.postclient :as pc])
@@ -95,7 +97,18 @@
           "name" "0188bab2-f0ab-8926-8c27-a4858a1fc04d"},
          "objectType" "Agent"}}}
       {:result :com.yetanalytics.lrs.auth/unauthorized})))
-  
+
+(def simulate-301
+  (interceptor
+   {:name ::simulate-301
+    :enter
+    (fn simulate-301 [ctx]
+      (assoc (chain/terminate ctx)
+             :response
+             {:status 301
+              :body   nil
+              :headers {"Location" "https://www.yetanalytics.com"}}))}))
+
 (defn create-lrs
   "Creates a unified object to start/stop a LRS instance:
   :port - For debugging
@@ -103,7 +116,7 @@
   :start - A function of no args that will start the LRS
   :stop - A function of no args that will stop the LRS
   :dump - A function of no args that will dump memory LRS state
-  :load - A function of two args, statements and attachments to load data" 
+  :load - A function of two args, statements and attachments to load data"
   [& {:keys [port]}]
   (let [port (or port
                  (get-free-port))
@@ -125,13 +138,17 @@
               mem/DumpableMemoryLRS
               (dump [_]
                 (mem/dump mem-lrs)))
+        routes (build {:lrs lrs})
+        routes-with-301 (conj routes
+                              ["/xapi/badpath/statements" :post [simulate-301]
+                               :route-name ::badpath]) 
         service
         {:env                   :dev
          :lrs                   lrs
          ::http/join?           false
          ::http/allowed-origins {:creds           true
                                  :allowed-origins (constantly true)}
-         ::http/routes          (build {:lrs lrs})
+         ::http/routes          routes-with-301
          ::http/resource-path   "/public"
          ::http/type            :jetty
 
@@ -351,4 +368,14 @@
         (pc/post-statement (format uri port) "username" "password" stmt-0-changed))
       (catch Exception e
         (is (= ::pc/post-error 
+               (-> e Throwable->map :via first :data :type)))))))
+
+(deftest test-post-client-redirect
+  (testing "testing for a URI with a bad path"
+    (try
+      (let [{:keys [port]} *test-lrs*]
+        (pc/post-statement (str "http://localhost:" port "/xapi/badpath")
+                           "username" "password" stmt-0))
+      (catch Exception e
+        (is (= ::pc/redirect-error
                (-> e Throwable->map :via first :data :type)))))))
