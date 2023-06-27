@@ -1,11 +1,13 @@
 (ns com.yetanalytics.postclient-test
-  (:require [clojure.test   :refer [deftest is are testing use-fixtures]] 
+  (:require [clojure.test   :refer [deftest is are testing use-fixtures]]
             [clojure.string :as cstr]
             [clojure.tools.logging :as log]
             [com.yetanalytics.lrs :as lrs]
             [com.yetanalytics.lrs.impl.memory :as mem]
             [com.yetanalytics.lrs.pedestal.interceptor :as i]
             [com.yetanalytics.lrs.pedestal.routes :refer [build]]
+            [io.pedestal.interceptor.chain :as chain]
+            [io.pedestal.interceptor :refer [interceptor]]
             [com.yetanalytics.lrs.protocol  :as lrsp]
             [io.pedestal.http :as http]
             [com.yetanalytics.postclient :as pc])
@@ -95,7 +97,18 @@
           "name" "0188bab2-f0ab-8926-8c27-a4858a1fc04d"},
          "objectType" "Agent"}}}
       {:result :com.yetanalytics.lrs.auth/unauthorized})))
-  
+
+(def simulate-301
+  (interceptor
+   {:name ::simulate-301
+    :enter
+    (fn simulate-301 [ctx]
+      (assoc (chain/terminate ctx)
+             :response
+             {:status 301
+              :body   nil
+              :headers {"Location" "https://www.yetanalytics.com"}}))}))
+
 (defn create-lrs
   "Creates a unified object to start/stop a LRS instance:
   :port - For debugging
@@ -103,7 +116,7 @@
   :start - A function of no args that will start the LRS
   :stop - A function of no args that will stop the LRS
   :dump - A function of no args that will dump memory LRS state
-  :load - A function of two args, statements and attachments to load data" 
+  :load - A function of two args, statements and attachments to load data"
   [& {:keys [port]}]
   (let [port (or port
                  (get-free-port))
@@ -125,13 +138,18 @@
               mem/DumpableMemoryLRS
               (dump [_]
                 (mem/dump mem-lrs)))
+        routes (build {:lrs lrs})
+        routes-with-301 (conj routes
+                              ["/xapi/badpath" :post [simulate-301]
+                               :route-name ::badpath])
+        _ (clojure.pprint/pprint routes-with-301)
         service
         {:env                   :dev
          :lrs                   lrs
          ::http/join?           false
          ::http/allowed-origins {:creds           true
                                  :allowed-origins (constantly true)}
-         ::http/routes          (build {:lrs lrs})
+         ::http/routes          routes-with-301
          ::http/resource-path   "/public"
          ::http/type            :jetty
 
@@ -166,16 +184,16 @@
 (defn lrs-fixture
   "Populate *test-lrs* with started a LRS on a free port
   LRSs are empty by default unless seed-path is provided"
-  [f] 
-  (let [{start-test :start 
-         stop-test :stop 
+  [f]
+  (let [{start-test :start
+         stop-test :stop
          :as test} (create-lrs)]
     (try
-      ;; start LRS --> shutdown if exceptions are thrown 
-      (start-test) 
-      (binding [*test-lrs* test] 
-        (f)) 
-      (finally 
+      ;; start LRS --> shutdown if exceptions are thrown
+      (start-test)
+      (binding [*test-lrs* test]
+        (f))
+      (finally
         (stop-test)))))
 
 (use-fixtures :each lrs-fixture)
@@ -246,7 +264,7 @@
 
 (def stmt-wrong-format
   {"wrong category" "id?"
-   "wrong category#2" "first name" 
+   "wrong category#2" "first name"
    "wrong category #3" "last name"})
 
 (def stmt-incomplete
@@ -286,23 +304,23 @@
          {:keys [port lrs]} *test-lrs*
          endpoint (format uri port)]
      (testing "testing if id matches return-id"
-       (are [id stmt] (= [id] (pc/post-statement endpoint "username" "password" stmt)) 
+       (are [id stmt] (= [id] (pc/post-statement endpoint "username" "password" stmt))
          id-0 stmt-0
          id-1 stmt-1
          id-2 stmt-2
          id-3 stmt-3))))
 
 (deftest test-post-client-invalid-args
-  (testing "testing for invalid hostname" 
+  (testing "testing for invalid hostname"
     (try
       (pc/post-statement "http://invalidhost:8080/xapi" "username" "password" stmt-0)
-      (catch Exception e 
-        (is (= ::pc/invalid-host-error 
+      (catch Exception e
+        (is (= ::pc/invalid-host-error
                (-> e Throwable->map :via first :data :type))))))
   (testing "testing for invalid port number"
     (try
      (pc/post-statement "http://localhost:10000000/xapi" "username" "password" stmt-0)
-      (catch Exception e 
+      (catch Exception e
         (is (= "port out of range:10000000"
                (-> e Throwable->map :via first :message))))))
   (testing "testing for invalid key"
@@ -319,14 +337,14 @@
       (catch Exception e
         (is (= ::pc/auth-error
                (-> e Throwable->map :via first :data :type)))))))
-  
-(deftest test-post-client-invalid-statements 
+
+(deftest test-post-client-invalid-statements
   (testing "testing for statement with invalid object UUID"
-   (try 
-     (let [{:keys [port]} *test-lrs*] 
-       (pc/post-statement (format uri port) "username" "password" stmt-inval)) 
-     (catch Exception e 
-       (is (= ::pc/post-error 
+   (try
+     (let [{:keys [port]} *test-lrs*]
+       (pc/post-statement (format uri port) "username" "password" stmt-inval))
+     (catch Exception e
+       (is (= ::pc/post-error
               (-> e Throwable->map :via first :data :type))))))
   (testing "testing for statement with completely wrong format"
     (try
@@ -335,14 +353,14 @@
       (catch Exception e
         (is (= ::pc/post-error
                (-> e Throwable->map :via first :data :type))))))
-  (testing "testing for statement with no verb and object" 
-    (try 
-      (let [{:keys [port]} *test-lrs*] 
-        (pc/post-statement (format uri port) "username" "password" stmt-incomplete)) 
-      (catch Exception e 
-        (is (= ::pc/post-error 
+  (testing "testing for statement with no verb and object"
+    (try
+      (let [{:keys [port]} *test-lrs*]
+        (pc/post-statement (format uri port) "username" "password" stmt-incomplete))
+      (catch Exception e
+        (is (= ::pc/post-error
                (-> e Throwable->map :via first :data :type)))))))
-  
+
 (deftest test-post-client-duplicate-statements
   (testing "testing for POSTing a duplicate statement"
     (try
@@ -350,5 +368,5 @@
         (pc/post-statement (format uri port) "username" "password" stmt-0)
         (pc/post-statement (format uri port) "username" "password" stmt-0-changed))
       (catch Exception e
-        (is (= ::pc/post-error 
+        (is (= ::pc/post-error
                (-> e Throwable->map :via first :data :type)))))))
