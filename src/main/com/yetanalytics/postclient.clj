@@ -23,9 +23,8 @@
   [endpoint key secret statement]
   (try
     (let [{:keys [status body headers]} (post-statement* endpoint key secret statement)]
-      ; handling error status codes
-      ; codes other than 200, 201, 202, 203, 204, 205, 207, 300, 301, 302, 303, 304, 307 
-      ; indicate error 
+      ;; handling error status codes
+      ;; codes other than 200, 201, 202, 203, 204, 205, 207 indicate error 
       (case status
         401 (throw (ex-info (str "Status code: " status
                                  " Reason: Invalid key or secret was entered")
