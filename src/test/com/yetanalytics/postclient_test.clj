@@ -299,14 +299,25 @@
          id-1  (get stmt-1 "id")
          id-2  (get stmt-2 "id")
          id-3  (get stmt-3 "id")
-         {:keys [port lrs]} *test-lrs*
+         {:keys [port]} *test-lrs*
          endpoint (format uri port)]
-     (testing "testing if id matches return-id"
+     (testing "testing if id matches return-ID"
        (are [id stmt] (= [id] (pc/post-statement endpoint "username" "password" stmt)) 
          id-0 stmt-0
          id-1 stmt-1
          id-2 stmt-2
          id-3 stmt-3))))
+
+(deftest test-post-client-mult-statements
+  (let [id-0  (get stmt-0 "id")
+        id-1  (get stmt-1 "id")
+        id-2  (get stmt-2 "id")
+        id-3  (get stmt-3 "id")
+        {:keys [port]} *test-lrs*
+        endpoint (format uri port)
+        return-IDs (pc/post-statement endpoint "username" "password" 
+                                      [stmt-0 stmt-1 stmt-2 stmt-3])] 
+    (is (= [id-0 id-1 id-2 id-3] return-IDs))))
 
 (deftest test-post-client-invalid-args
   (testing "testing for invalid hostname" 
@@ -376,5 +387,5 @@
         (pc/post-statement (str "http://localhost:" port "/xapi/badpath")
                            "username" "password" stmt-0))
       (catch Exception e
-        (is (= ::pc/redirect-error
+        (is (= ::pc/redirect-error 
                (-> e Throwable->map :via first :data :type)))))))

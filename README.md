@@ -15,7 +15,7 @@ The library includes the function `post-statement` with the parameters `(post-st
 
 `statement`: The EDN formatted xAPI statement to POST
 
-Note: When there are no errors thrown, `post-statement` returns a list of ID of the inserted statement
+Note: When there are no errors thrown, `post-statement` returns a list of ID(s) of the inserted statement(s)
 
 ## Example Usage
 
