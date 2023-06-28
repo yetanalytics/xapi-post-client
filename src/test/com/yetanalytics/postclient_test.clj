@@ -285,8 +285,8 @@
         {:keys [port lrs]} *test-lrs*
         endpoint (format uri port)]
     ;; insert statements to lrs
-    (doseq [stmts [stmt-0 stmt-1 stmt-2 stmt-3]]
-           (pc/post-statement endpoint "username" "password" stmts))
+    (doseq [stmt [stmt-0 stmt-1 stmt-2 stmt-3]]
+           (pc/post-statement endpoint "username" "password" stmt))
     (testing "testing if statements match"
       (are [stmt id] (= {:statement stmt} (get-ss lrs auth-ident {:statementId id} #{}))
         stmt-0 id-0
