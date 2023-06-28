@@ -17,8 +17,6 @@
                 :throw-entire-message? true
                 :as :json}))
 
-;
-
 (defn post-statement
   [endpoint key secret statement]
   (try
