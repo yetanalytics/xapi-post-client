@@ -35,15 +35,13 @@
         409 (throw (ex-info (str "Status code: " status
                                  " Reason: Cannot insert a duplicate statement")
                             {:type ::post-error}))
-        (if (and (< status 308) (> status 299))
+        (if (< 299 status 308)
           (throw (ex-info (str "Status code: " status " Location: " (:location headers))
-                          {:type ::redirect-error}))))
-      ;; last error conditional
-      (if (> status 307)
-        (throw (ex-info (str "Status code: " status
-                             " Reason: " body)
-                        {:type ::post-error})))
-      body)
+                          {:type ::redirect-error}))
+          (if (> status 307)
+            (throw (ex-info (str "Status code: " status " Reason: " body)
+                            {:type ::post-error})))))
+          body)
     ;; catching irregular exceptions   
     ;; invalid port and auth exception messages are sent out by clj.http
     (catch UnknownHostException e
