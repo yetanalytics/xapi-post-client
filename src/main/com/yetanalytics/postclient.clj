@@ -39,7 +39,7 @@
           (<= 300 status 307)
           (throw (ex-info (str "Status code: " status " Location: " (:location headers))
                           {:type ::redirect-error}))
-          (>= status 308)
+          (<= 308 status)
           (throw (ex-info (str "Status code: " status " Reason: " body)
                           {:type ::post-error}))))
           body)
