@@ -41,7 +41,7 @@
 (defn bytes->str
   "Converts `bytes` into a string. Assumes UTF-8 encoding."
   [^"[B" bytes]
-  (String. bytes utf8-charset))
+  (String. bytes ^Charset utf8-charset))
 
 (defn header->key-pair
   "Given a header of the form `Basic [Base64 string]`, return a map with keys
