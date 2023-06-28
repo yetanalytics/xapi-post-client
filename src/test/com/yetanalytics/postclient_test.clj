@@ -140,17 +140,14 @@
               mem/DumpableMemoryLRS
               (dump [_]
                 (mem/dump mem-lrs)))
-        routes (build {:lrs lrs})
-        routes-with-301 (conj routes
-                              ["/xapi/badpath/statements" :post [simulate-301]
-                               :route-name ::badpath]) 
+        routes (conj (build {:lrs lrs}) ["/xapi/badpath/statements" :post [simulate-301]]) 
         service
         {:env                   :dev
          :lrs                   lrs
          ::http/join?           false
          ::http/allowed-origins {:creds           true
                                  :allowed-origins (constantly true)}
-         ::http/routes          routes-with-301
+         ::http/routes          routes
          ::http/resource-path   "/public"
          ::http/type            :jetty
 
