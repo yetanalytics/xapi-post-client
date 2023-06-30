@@ -1,0 +1,35 @@
+{:paths ["src/main"]
+ :deps 
+ {org.clojure/data.json {:mvn/version "2.4.0"}
+  org.clojure/clojure {:mvn/version "1.10.3"}
+  clj-http/clj-http {:mvn/version "3.12.3"} 
+  cheshire/cheshire {:mvn/version "5.11.0"}}
+
+ :aliases 
+ {:test
+  {:extra-paths ["src/test"]
+   :extra-deps
+   {com.yetanalytics/lrs {:mvn/version "1.2.15"
+                          :exclusions  [org.clojure/clojure
+                                        org.clojure/clojurescript
+                                        com.yetanalytics/xapi-schema]}
+    org.clojure/tools.logging {:mvn/version "1.1.0"}
+    com.yetanalytics/xapi-schema {:mvn/version "1.2.0"
+                                  :exclusions
+                                  [org.clojure/clojure org.clojure/clojurescript]}
+    io.pedestal/pedestal.jetty {:mvn/version "0.5.9"}
+    io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}}
+  :runner 
+  {:extra-paths ["src/test"]
+   :extra-deps
+   {com.yetanalytics/lrs {:mvn/version "1.2.15"
+                          :exclusions  [org.clojure/clojure
+                                        org.clojure/clojurescript
+                                        com.yetanalytics/xapi-schema]}
+    org.clojure/tools.logging {:mvn/version "1.1.0"}
+    com.yetanalytics/xapi-schema {:mvn/version "1.2.0"
+                                  :exclusions
+                                  [org.clojure/clojure org.clojure/clojurescript]}
+    io.pedestal/pedestal.jetty {:mvn/version "0.5.9"}
+    io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+   :exec-fn cognitect.test-runner.api/test}}}
