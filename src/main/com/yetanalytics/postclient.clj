@@ -47,3 +47,5 @@
       (throw (ex-info (str "An invalid hostname was inputted")
                       {:type ::invalid-host-error}
                       e)))))
+
+;; init commit
