@@ -26,26 +26,32 @@
       (case status
         401 (throw (ex-info (str "Status code: " status
                                  " Reason: Invalid key or secret was entered")
-                            {:type ::auth-error}))
+                            {:type ::auth-error
+                             :status status}))
         403 (throw (ex-info (str "Status code: " status
                                  " Reason: Cannot access area where permission is not granted")
-                            {:type ::forbidden-error}))
+                            {:type ::forbidden-error
+                             :status status}))
         409 (throw (ex-info (str "Status code: " status
                                  " Reason: Cannot insert a duplicate statement")
-                            {:type ::post-error}))
+                            {:type ::post-error
+                             :status status}))
         (cond
           (<= 300 status 307)
           (throw (ex-info (str "Status code: " status " Location: " (:location headers))
-                          {:type ::redirect-error}))
+                          {:type ::redirect-error
+                           :status status}))
           (<= 308 status)
           (throw (ex-info (str "Status code: " status " Reason: " body)
-                          {:type ::post-error}))))
+                          {:type ::post-error
+                           :status status}))))
           body)
     ;; catching irregular exceptions   
     ;; invalid port and auth exception messages are sent out by clj.http
     (catch UnknownHostException e
       (throw (ex-info (str "An invalid hostname was inputted")
-                      {:type ::invalid-host-error}
+                      {:type ::invalid-host-error
+                       :status 403}
                       e)))))
 
 ;; init commit
