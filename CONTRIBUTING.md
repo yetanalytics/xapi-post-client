@@ -42,7 +42,7 @@ For contributions in Clojure, we would suggest you read this [Clojure Style Guid
 
 ### Tests
 
-In order for us to merge a Pull Request it must pass the `make ci` Makefile target. This target runs a set of unit, integration and/or conformance tests which verify the build's behavior. Please run this target and remediate any issues before submitting a Pull Request.
+In order for us to merge a Pull Request it must pass the `make test-unit` Makefile target. This target runs a set of unit, integration and/or conformance tests which verify the build's behavior. Please run this target and remediate any issues before submitting a Pull Request.
 
 We ask that when adding or changing functionality in the system that you examine whether it is a candidate for additional or modified test coverage and add it if so. You can see what sort of tests are in place currently by exploring the namespaces in `src/test`.
 
