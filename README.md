@@ -41,7 +41,7 @@ Below is an example of POSTing using `post-statement`:
 
 ## License
 
-Copyright © 2023-2024 Yet Analytics, Inc.
+Copyright © 2023-2025 Yet Analytics, Inc.
 
 Distributed under the Apache License version 2.0.
 
